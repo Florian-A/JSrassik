@@ -1,6 +1,6 @@
 # Projet II: JSrassiK
 
-Google Chrome Dino Easter Egg  ![](./mockup/dino.png) + Flappy dino ![](./mockup/flapydino.png) + Javascript = JSrassiK !
+Google Chrome Dino Easter Egg  ![](./mockup/dino.png) + Flappy dino ![](./mockup/flapybird.png) + Javascript = JSrassiK !
 
 ## 📐 Maquettes fonctionnelles
 
