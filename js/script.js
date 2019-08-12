@@ -72,10 +72,9 @@ class Debug {
     }
     // Mesure du nombre d'images par secondes.
     startPerfMeasurement() {
-        //this.fps = 'FPS:'+(((performance.now()-this.drawingTime))*fps/(performance.now()-this.drawingTime)).toFixed(2);
         let time = Date.now();
-        this.fps = time - this.lastTime * (fps/(time-this.lastTime));
-        this.lastTime = Date.now();
+        this.fps = 'FPS:'+((fps/(time-this.lastTime) )*(1000/fps)).toFixed(2);
+        this.lastTime = time;
     }
     // Dessin dans le context.
     draw() {
@@ -128,7 +127,8 @@ function draw() {
     context.drawImage(background, 0, 0, 600, 250);
 
     // Dessin du sol.
-    context.drawImage(ground, 0, 200, 884, 50);
+    //context.drawImage(ground, 0, 200, 884, 50);
+    
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
@@ -138,6 +138,7 @@ function draw() {
                 //context.fillStyle = "#0095DD";
                 //context.fill();
                 //context.closePath();
+                //context.drawImage(ground, x, y, 1, 1);
             }
         }
     }
