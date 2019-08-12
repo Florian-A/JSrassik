@@ -34,11 +34,14 @@ let dinoPos = [0, 0];
 let dinoAnimationLoop = 0
 let dinoOnTheAir = false;
 let gameOver = false;
+let dinoJumpStart = false;
 
 // Definition des evenents.
 document.addEventListener("keydown", function (event) {
     if (event.which === 32) {
-        dinoPos[1] -= 60;
+        if (dinoPos[1] === 160 && !gameOver) {
+            dinoJumpStart = true;
+        }
     }
 })
 
@@ -57,15 +60,41 @@ function draw() {
 
     // Obstacle
     context.drawImage(obstacle, 0, 0, 25, 50, 400, 160, 25, 50);
-    if (dinoPos[1] >= 135 && dinoPos[0] > 360 && dinoPos[0] < 380) {
+    if (dinoPos[1] >= 135 && dinoPos[0] > 365 && dinoPos[0] < 410) {
         gameOver = true;
+    }
+
+    // Saut fluide
+    if (dinoJumpStart === true) {
+
+        if (dinoPos[1] < 85) {
+            dinoJumpStart = false;
+        }
+        else if (dinoPos[1] <= 90) {
+            dinoPos[1] -= 4;
+        }        
+        else if (dinoPos[1] <= 100) {
+            dinoPos[1] -= 5;
+        }
+        else if (dinoPos[1] <= 110) {
+            dinoPos[1] -= 6;
+        }
+        else if (dinoPos[1] <= 120) {
+            dinoPos[1] -= 7;
+        }
+        else if (dinoPos[1] <= 140) {
+            dinoPos[1] -= 9;
+        }
+        else if (dinoPos[1] <= 160) {
+            dinoPos[1] -= 10;
+        }
     }
 
     // Arret du jeu en cas de game over.
     if (!gameOver) {
 
         // Mouvenement automatique du joueur.
-        dinoPos[1] += 2;
+        dinoPos[1] += 3;
         dinoPos[0]++;
 
         // Saut du T-rex.
@@ -104,9 +133,6 @@ function draw() {
         dinoPos[0] = 0;
     }
 
-    if (dinoPos[1] <= 90) {
-        dinoPos[1] = 90;
-    }
 
 }
 draw();
