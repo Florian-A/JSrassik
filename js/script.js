@@ -1,18 +1,37 @@
 // Doccumentation sur les Canvas
 // https://developer.mozilla.org/fr/docs/Tutoriel_canvas/Utilisation_d'images
 
+// Configuration du jeu.
+const height = 250;
+const width = 600;
+const fps = 60;
+const gravity = 2;
 
-// Selection du canvas et definition de la taille.
+// Selection du canvas et definition de sa taille.
 const canvas = document.querySelector("#game-display");
-canvas.width = 600;
-canvas.height = 250;
-
+canvas.width = width;
+canvas.height = height;
 // Definition du context.
 const context = canvas.getContext("2d");
 
-// Creation du T-rex
-let dino = new Image();
-dino.src = "./layout/dino.png";
+// System de collision basique.
+const collision = [];
+for (let y = 0; y < height; y++) {
+    collision[y] = [];
+    for (let x = 0; x < width; x++) {
+        collision[y][x] = { x: x, y: y, ground: 0, cactus: 0, leaf:0 };
+    }
+}
+// Definition de la collision avec sol.
+for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+        if(y>=200)
+        {
+            collision[y][x] = { x: x, y: y, ground: 1, cactus: 0, leaf:0 };
+        }
+        
+    }
+}
 
 // Creation d'un obstacle
 let obstacle = new Image();
@@ -30,9 +49,6 @@ ground.src = "./layout/ground.png";
 let lGameOver = new Image();
 lGameOver.src = "./layout/gameover.png";
 
-let dinoPos = [0, 0];
-let dinoAnimationLoop = 0
-let dinoOnTheAir = false;
 let gameOver = false;
 let dinoJumpStart = false;
 
@@ -45,12 +61,68 @@ document.addEventListener("keydown", function (event) {
     }
 })
 
+// Panneau de debugage //
+class Debug {
+    constructor() {
+        this.textFont = "18px monospace";
+        this.pos = [canvas.width-150, 20];
+        this.text = "Debug";
+        this.lastTime = 0;
+        this.fps = 0;
+    }
+    // Mesure du nombre d'images par secondes.
+    startPerfMeasurement() {
+        //this.fps = 'FPS:'+(((performance.now()-this.drawingTime))*fps/(performance.now()-this.drawingTime)).toFixed(2);
+        let time = Date.now();
+        this.fps = time - this.lastTime * (fps/(time-this.lastTime));
+        this.lastTime = Date.now();
+    }
+    // Dessin dans le context.
+    draw() {
+        context.font = this.textFont;
+        context.fillText(this.fps, this.pos[0], this.pos[1]);
+    }
+}
 
+class TRex {
+    constructor() {
+      this.pos = [0, 0];
+      this.imgLayout = new Image();
+      this.imgLayout.src = "./layout/dino.png";
+      this.imgHeight = 43;
+      this.imgWidth = 40;
+      this.imgPosY = 0;
+      this.imgPosX = 82;
+    }
+    draw() {
+        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[0], this.pos[1],this.imgHeight, this.imgWidth);
+    }
+    gravity() {
+        this.pos[0] -= gravity;
+    }
+    collision() {
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                if (collision[y][x].ground == 1) {
+                    this.pos[1] = 160;
+                }
+            }
+        }
+    }
+    move(posY,posX) {
+        this.pos[0] = this.pos[0]+posY;
+        this.pos[1] = this.pos[1]+posX;
+        this.gravity();
+        this.collision();
+        this.draw();
+    }
+  }
+
+let player = new TRex();
+let debug = new Debug();
 
 function draw() {
-
-    // Debug
-    console.log(dinoPos[0] + ' ' + dinoPos[1])
+    debug.startPerfMeasurement();
 
     // Dessin du fond d'ecran.
     context.drawImage(background, 0, 0, 600, 250);
@@ -58,83 +130,24 @@ function draw() {
     // Dessin du sol.
     context.drawImage(ground, 0, 200, 884, 50);
 
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (collision[y][x].ground == 1) {
+                //context.beginPath();
+                //context.rect(1, 1, 1, 1);
+                //context.fillStyle = "#0095DD";
+                //context.fill();
+                //context.closePath();
+            }
+        }
+    }
+
     // Obstacle
     context.drawImage(obstacle, 0, 0, 25, 50, 400, 160, 25, 50);
-    if (dinoPos[1] >= 135 && dinoPos[0] > 365 && dinoPos[0] < 410) {
-        gameOver = true;
-    }
 
-    // Saut fluide
-    if (dinoJumpStart === true) {
+    player.move(4,4);
 
-        if (dinoPos[1] < 85) {
-            dinoJumpStart = false;
-        }
-        else if (dinoPos[1] <= 90) {
-            dinoPos[1] -= 4;
-        }        
-        else if (dinoPos[1] <= 100) {
-            dinoPos[1] -= 5;
-        }
-        else if (dinoPos[1] <= 110) {
-            dinoPos[1] -= 6;
-        }
-        else if (dinoPos[1] <= 120) {
-            dinoPos[1] -= 7;
-        }
-        else if (dinoPos[1] <= 140) {
-            dinoPos[1] -= 9;
-        }
-        else if (dinoPos[1] <= 160) {
-            dinoPos[1] -= 10;
-        }
-    }
-
-    // Arret du jeu en cas de game over.
-    if (!gameOver) {
-
-        // Mouvenement automatique du joueur.
-        dinoPos[1] += 3;
-        dinoPos[0]++;
-
-        // Saut du T-rex.
-        if (dinoPos[1] < 160) {
-            context.drawImage(dino, 0, 0, 40, 43, dinoPos[0], dinoPos[1], 43, 40);
-        }
-        else {
-            // Course du T-rex.
-            if (dinoAnimationLoop <= 4) {
-                context.drawImage(dino, 41, 0, 40, 43, dinoPos[0], dinoPos[1], 43, 40);
-                dinoAnimationLoop++
-            }
-            else if (dinoAnimationLoop <= 9) {
-                context.drawImage(dino, 82, 0, 40, 43, dinoPos[0], dinoPos[1], 43, 40);
-                dinoAnimationLoop++
-            }
-            else {
-                context.drawImage(dino, 82, 0, 40, 43, dinoPos[0], dinoPos[1], 43, 40);
-                dinoAnimationLoop = 0;
-            }
-        }
-    }
-    else {
-        context.drawImage(dino, 41, 0, 40, 43, dinoPos[0], dinoPos[1], 43, 40);
-        dinoAnimationLoop++
-
-        context.drawImage(lGameOver, 0, 0, 191, 11, 200, 100, 191, 11);
-        dinoAnimationLoop++
-    }
-
-    // Remise a zero quand depassement du cadre.
-    if (dinoPos[1] >= 160) {
-        dinoPos[1] = 160;
-    }
-    if (dinoPos[0] > 620) {
-        dinoPos[0] = 0;
-    }
-
-
+    debug.draw();
 }
-draw();
 
-setInterval(draw, 1000 / 60);
+setInterval(draw, 1000/fps);
