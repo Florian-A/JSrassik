@@ -1,35 +1,45 @@
 // Doccumentation sur les Canvas
-// https://developer.mozilla.org/fr/docs/Tutoriel_canvas/Utilisation_d'images
+// https://developer.mozilla.org/fr/docs/Tutoriel_canvas/Utilisation_d'images#D.C3.A9coupage
 
 // Configuration du jeu.
 const height = 250;
 const width = 600;
 const fps = 60;
-const gravity = 2;
+const gravity = 6;
+let debugMessage;
 
 // Selection du canvas et definition de sa taille.
 const canvas = document.querySelector("#game-display");
 canvas.width = width;
 canvas.height = height;
+
 // Definition du context.
 const context = canvas.getContext("2d");
 
-// System de collision basique.
+// Definition du system de collision basique.
 const collision = [];
 for (let y = 0; y < height; y++) {
     collision[y] = [];
     for (let x = 0; x < width; x++) {
-        collision[y][x] = { x: x, y: y, ground: 0, cactus: 0, leaf:0 };
+        collision[y][x] = { x: x, y: y, ground: 0, cactus: 0, leaf: 0 };
     }
 }
 // Definition de la collision avec sol.
 for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-        if(y>=200)
-        {
-            collision[y][x] = { x: x, y: y, ground: 1, cactus: 0, leaf:0 };
+        if (y >= 160) {
+            collision[y][x].ground = 1;
         }
-        
+
+    }
+}
+// Definition de la collision avec un cactus
+for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+        if (y >= 120 && x >= 370 && x <= 400) {
+            collision[y][x].cactus = 1;
+        }
+
     }
 }
 
@@ -52,73 +62,96 @@ lGameOver.src = "./layout/gameover.png";
 let gameOver = false;
 let dinoJumpStart = false;
 
-// Definition des evenents.
-document.addEventListener("keydown", function (event) {
-    if (event.which === 32) {
-        if (dinoPos[1] === 160 && !gameOver) {
-            dinoJumpStart = true;
-        }
-    }
-})
-
 // Panneau de debugage //
 class Debug {
     constructor() {
         this.textFont = "18px monospace";
-        this.pos = [canvas.width-150, 20];
-        this.text = "Debug";
+        this.pos = [20, 20];
         this.lastTime = 0;
         this.fps = 0;
     }
     // Mesure du nombre d'images par secondes.
     startPerfMeasurement() {
         let time = Date.now();
-        this.fps = 'FPS:'+((fps/(time-this.lastTime) )*(1000/fps)).toFixed(2);
+        this.fps = 'FPS:' + ((fps / (time - this.lastTime)) * (1000 / fps)).toFixed(2);
         this.lastTime = time;
     }
     // Dessin dans le context.
     draw() {
         context.font = this.textFont;
-        context.fillText(this.fps, this.pos[0], this.pos[1]);
+        context.fillText(this.fps, this.pos[1], this.pos[0]);
+        if (debugMessage !== null) {
+            context.fillText(debugMessage, this.pos[1], this.pos[0] + 20);
+        }
     }
 }
 
 class TRex {
     constructor() {
-      this.pos = [0, 0];
-      this.imgLayout = new Image();
-      this.imgLayout.src = "./layout/dino.png";
-      this.imgHeight = 43;
-      this.imgWidth = 40;
-      this.imgPosY = 0;
-      this.imgPosX = 82;
+        // pos[0] ordonnée y.
+        // pos[1] abscisse x.
+        this.pos = [0, 0];
+        this.imgLayout = new Image();
+        this.imgLayout.src = "./layout/dino.png";
+        this.imgHeight = 43;
+        this.imgWidth = 40;
+        this.imgPosY = 0;
+        this.imgPosX = 82;
+        this.collisionY = false;
+        this.collisionX = false;
     }
     draw() {
-        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[0], this.pos[1],this.imgHeight, this.imgWidth);
+        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgHeight, this.imgWidth);
     }
     gravity() {
-        this.pos[0] -= gravity;
-    }
-    collision() {
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                if (collision[y][x].ground == 1) {
-                    this.pos[1] = 160;
-                }
-            }
+        if (this.collisionY === false && collision[this.pos[0]][this.pos[1]].cactus === 0) {
+            this.pos[0] += gravity;
         }
     }
-    move(posY,posX) {
-        this.pos[0] = this.pos[0]+posY;
-        this.pos[1] = this.pos[1]+posX;
+    collision() {
+        if (collision[this.pos[0]][this.pos[0]].ground === 1) {
+            this.collisionY = true;
+        }
+        if (collision[this.pos[0]][this.pos[1]].cactus === 1) {
+            this.collisionX = true;
+        }
+        else {
+            this.collisionX = false;
+        }
+    }
+    jump() {
+        this.pos[0] = this.pos[0] - 80;
+        this.collisionY = false;
+    }
+    move(posY, posX) {
+        if (this.collisionY === false) {
+            this.pos[0] = this.pos[0] + posY;
+        }
+        if (this.collisionX === false) {
+            this.pos[1] = this.pos[1] + posX;
+        }
+        debugMessage = collision[this.pos[0]][this.pos[1]+30].cactus;
+
+        if(collision[this.pos[0]][this.pos[1]+30].cactus === 1 || collision[this.pos[0]][this.pos[1]].cactus === 1) {
+            this.jump();
+        }
         this.gravity();
         this.collision();
         this.draw();
     }
-  }
+}
+
+
 
 let player = new TRex();
 let debug = new Debug();
+
+// Definition des evenents.
+document.addEventListener("keydown", function (event) {
+    if (event.which === 32) {
+        player.jump();
+    }
+})
 
 function draw() {
     debug.startPerfMeasurement();
@@ -127,28 +160,15 @@ function draw() {
     context.drawImage(background, 0, 0, 600, 250);
 
     // Dessin du sol.
-    //context.drawImage(ground, 0, 200, 884, 50);
-    
+    context.drawImage(ground, 0, 200, 884, 50);
 
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            if (collision[y][x].ground == 1) {
-                //context.beginPath();
-                //context.rect(1, 1, 1, 1);
-                //context.fillStyle = "#0095DD";
-                //context.fill();
-                //context.closePath();
-                //context.drawImage(ground, x, y, 1, 1);
-            }
-        }
-    }
 
     // Obstacle
     context.drawImage(obstacle, 0, 0, 25, 50, 400, 160, 25, 50);
 
-    player.move(4,4);
+    player.move(0, 2);
 
     debug.draw();
 }
 
-setInterval(draw, 1000/fps);
+setInterval(draw, 1000 / fps);
