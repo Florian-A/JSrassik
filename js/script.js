@@ -5,8 +5,10 @@
 const height = 250;
 const width = 600;
 const fps = 60;
-const gravity = 6;
+const gravity = 1;
+let debugLevel = 2;
 let debugMessage;
+let intervalStarted = false;
 
 // Selection du canvas et definition de sa taille.
 const canvas = document.querySelector("#game-display");
@@ -21,33 +23,83 @@ const collision = [];
 for (let y = 0; y < height; y++) {
     collision[y] = [];
     for (let x = 0; x < width; x++) {
-        collision[y][x] = { x: x, y: y, ground: 0, cactus: 0, leaf: 0 };
+        collision[y][x] = { y: y, x: x, ground: 0, cactus: 0, leaf: 0 };
     }
 }
 // Definition de la collision avec sol.
 for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-        if (y >= 160) {
+        if (y >= 200) {
             collision[y][x].ground = 1;
         }
 
     }
 }
 
-function showCollision() {
-    for (let y = 0; y < height; y++) {
+function breakInterval() {
+    clearInterval(interval);
+    intervalStarted = false;
+}
 
-        for (let x = 0; x < width; x++) {
-            if (collision[y][x].cactus === 1) {
-                context.fillStyle = "rgba(0,0,0,0.5)";
-                context.fillRect(x, y, 1, 1);
-                context.stroke();
+function nextInterval() {
+    intervalLoop();
+}
+
+function startInterval() {
+    if (!intervalStarted) {
+        interval = setInterval(intervalLoop, 1000 / fps);
+        intervalStarted = true;
+    }
+
+}
+
+function showGroundCollision() {
+
+    let groundYStart = 0;
+    let groundYEnd = height;
+    let groundXStart = 0;
+    let groundXEnd = width;
+    if (debugLevel >= 2) {
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                if (collision[y][0].ground === 1 && collision[y - 1][0].ground == 0) {
+                    groundYStart = collision[y][0].y;
+                }
             }
         }
-
-
+        context.fillStyle = "rgba(0,0,0,0.5)";
+        context.fillRect(groundXStart, groundYStart, groundXEnd - groundXStart, groundYEnd - groundYStart);
+        context.stroke();
     }
 }
+
+function showGrid() {
+
+    let gridYStart = 0;
+    let gridYEnd = height;
+    let gridXStart = 0;
+    let gridXEnd = width;
+    if (debugLevel >= 2) {
+
+        for (let y = 0; y < height; y++) {
+            context.fillStyle = "rgba(255,0,0,1)";
+            if (y % 50 === 49) {
+                context.fillRect(gridXStart, y, gridXEnd - gridXStart, 1 - gridYStart);
+                context.fillText(y + 1, gridXEnd - 40, y);
+            }
+
+        }
+        for (let x = 0; x < width; x++) {
+            context.fillStyle = "rgba(255,0,0,1)";
+            if (x % 50 === 49) {
+                context.fillRect(x + 1, gridYStart, 1 - gridXStart, gridYEnd - gridYStart);
+                context.fillText(x + 1, x, gridYEnd - 25);
+            }
+        }
+        context.stroke();
+    }
+}
+
 
 // Panneau de debugage //
 class Debug {
@@ -65,15 +117,18 @@ class Debug {
     }
     // Dessin dans le context.
     draw() {
-        context.font = this.textFont;
-        context.fillStyle = "rgba(0,0,0,1)";
-        context.fillText(this.fps, this.pos[1], this.pos[0]);
-        if (debugMessage !== null) {
-            context.fillText(debugMessage, this.pos[1], this.pos[0] + 20);
+        if (debugLevel >= 1) {
+            context.font = this.textFont;
+            context.fillStyle = "rgba(0,0,0,1)";
+            context.fillText(this.fps, this.pos[1], this.pos[0]);
+            if (debugMessage !== undefined) {
+                context.fillText(debugMessage, this.pos[1], this.pos[0] + 20);
+            }
         }
+
     }
 }
-// Creation des cactus
+// Gestion des cactus
 //////////////////////////////////////////////
 //                                        
 //                MMMMMMMM                
@@ -142,7 +197,7 @@ class Cactus {
     collision() {
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
-                if (y >= this.pos[0] - this.imgHeight && x >= this.pos[1] - this.imgWidth && x <= this.pos[1]) {
+                if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
                     collision[y][x].cactus = 1;
                 }
                 else if (collision[y][x].cactus === 0) {
@@ -152,6 +207,29 @@ class Cactus {
                     collision[y][x].cactus = 0;
                 }
             }
+        }
+    }
+    showCollision() {
+        if (debugLevel >= 2) {
+            for (let y = 0; y < height; y++) {
+
+                for (let x = 0; x < width; x++) {
+
+                    if (collision[y][x].cactus === 1) {
+                        context.fillStyle = "rgba(0,0,0,0.5)";
+                        context.fillRect(x, y, 1, 1);
+                    }
+                    if (typeof (collision[y - 1]) !== "undefined" && typeof (collision[y - 1][x - 1]) !== "undefined") {
+                        if (typeof (collision[y - 1][x]) !== "undefined" && typeof (collision[y][x - 1]) !== "undefined") {
+                            if ((collision[y - 1][x].cactus === 0 && collision[y][x - 1].cactus === 0) && collision[y][x].cactus === 1) {
+                                context.fillStyle = "rgba(255,0,0,1)";
+                                context.fillRect(x, y, 5, 5);
+                            }
+                        }
+                    }
+                }
+            }
+            context.stroke();
         }
     }
     enable() {
@@ -166,9 +244,9 @@ class Cactus {
             this.pos[1] -= 1;
             this.collision();
             this.draw();
+            this.showCollision();
         }
-        if (this.pos[1] < 0-this.imgWidth)
-        {
+        if (this.pos[1] < 0 - this.imgWidth) {
             this.disable();
         }
     }
@@ -215,6 +293,7 @@ class TRex {
         this.imgPosY = 0;
         this.imgPosX = 82;
         this.imgSteep = 0;
+        this.posCollision = [this.pos[0] + this.imgHeight, this.pos[1] + this.imgWidth];
         this.collisionY = false;
         this.collisionX = false;
     }
@@ -236,23 +315,65 @@ class TRex {
         context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
     }
     gravity() {
-        if (this.collisionY === false && collision[this.pos[0]][this.pos[1]].cactus === 0) {
+        if (this.collisionY === false) {
             this.pos[0] += gravity;
         }
     }
     collision() {
-        if (collision[this.pos[0]][this.pos[0]].ground === 1) {
+        this.posCollision = [this.pos[0] + this.imgHeight, this.pos[1] + this.imgWidth];
+
+        let collisionY;
+        for (let index = 0; index <= this.imgWidth; index++) {
+
+            if (collision[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                collisionY = true;
+            }
+        }
+        if (collisionY == true) {
             this.collisionY = true;
         }
-        if (collision[this.pos[0]][this.pos[1]].cactus === 1) {
+        else {
+            this.collisionY = false;
+        }
+        if (collision[this.posCollision[0]][this.posCollision[1]].ground === 1) {
+            this.collisionY = true;
+        }
+
+        let collisionX;
+        for (let index = 0; index <= this.imgHeight; index++) {
+
+            if (collision[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                collisionX = true;
+            }
+        }
+        if (collisionX == true) {
             this.collisionX = true;
         }
         else {
             this.collisionX = false;
         }
+
+        debugMessage='Y:';
+        debugMessage+=this.collisionY;
+        debugMessage+='X:';
+        debugMessage+=this.collisionX;
+    }
+    showCollision() {
+        if (debugLevel >= 2) {
+            context.fillStyle = "rgba(0,0,0,0.5)";
+            context.fillRect(this.pos[1], this.pos[0], this.posCollision[1] - this.pos[1], this.posCollision[0] - this.pos[0]);
+            context.fillStyle = "rgba(255,0,0,1)";
+            context.fillRect(this.pos[1], this.pos[0], 5, 5);
+            context.stroke();
+        }
     }
     jump() {
-        this.pos[0] = this.pos[0] - 80;
+        if (this.pos[0] > 100) {
+            this.pos[0] = this.pos[0] - 100;
+        }
+        else {
+            this.pos[0] = 0;
+        }
         this.collisionY = false;
     }
     move(posY, posX) {
@@ -262,12 +383,14 @@ class TRex {
         if (this.collisionX === false) {
             this.pos[1] = this.pos[1] + posX;
         }
-        if (collision[this.pos[0]][this.pos[1] + 30].cactus === 1 || collision[this.pos[0]][this.pos[1]].cactus === 1 && collision[this.pos[0] - 1][this.pos[1]].cactus === 0) {
-            this.jump();
+        //if (collision[this.pos[0]][this.pos[1] + 30].cactus === 1 || collision[this.pos[0]][this.pos[1]].cactus === 1 && collision[this.pos[0] - 1][this.pos[1]].cactus === 0) {
+        if (collision[this.pos[0]][this.pos[1] + 30].cactus === 1) {
+            //this.jump();
         }
         this.gravity();
         this.collision();
         this.draw();
+        this.showCollision();
     }
 }
 
@@ -303,11 +426,31 @@ document.addEventListener("keydown", function (event) {
     }
 })
 
+// Gestion des frames
+document.addEventListener("keydown", function (event) {
+    if (event.which === 36) {
+        startInterval();
+    }
+    if (event.which === 35) {
+        breakInterval();
+    }
+    if (event.which === 45) {
+        nextInterval();
+    }
+    if (event.which === 49) {
+        debugLevel = 1;
+    }
+    if (event.which === 50) {
+        debugLevel = 2;
+    }
+    if (event.which === 48) {
+        debugLevel = 0;
+    }
+})
+
 let renderedFrame = 0;
 
-cactus[0].enable();
-
-function interval() {
+function intervalLoop() {
     debug.startPerfMeasurement();
     renderedFrame++;
 
@@ -317,18 +460,21 @@ function interval() {
     // Dessin du sol.
     context.drawImage(ground, 0, 200, 884, 50);
 
-    if (renderedFrame % 200 === 199) {
+    if (renderedFrame % 50 === 49) {
         cactus[1].enable();
     }
-    cactus[0].move();
+    if (renderedFrame % 100 === 99) {
+        cactus[2].enable();
+    }
+    //cactus[0].move();
     cactus[1].move();
-
-    //showCollision();
-
+    cactus[2].move();
 
     player.move(0, 0);
+    showGroundCollision();
+    showGrid();
 
     debug.draw();
 }
 
-setInterval(interval, 1000 / fps);
+startInterval();

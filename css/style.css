@@ -1,7 +1,10 @@
+html {
+    font-family: monospace;
+}
 .game-canvas {
     width: 600px;
     transform: scale(1) translateY(0px);
-    height: 150px;
+    height: 250px;
 }
 
 .game-canvas canvas {
