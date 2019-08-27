@@ -1,3 +1,23 @@
+//                                                                                                                      
+//           JJJJJJJJJJJ   SSSSSSSSSSSSSSS                                                      iiii  kkkkkkkk           
+//           J:::::::::J SS:::::::::::::::S                                                    i::::i k::::::k           
+//           J:::::::::JS:::::SSSSSS::::::S                                                     iiii  k::::::k           
+//           JJ:::::::JJS:::::S     SSSSSSS                                                           k::::::k           
+//             J:::::J  S:::::S           rrrrr   rrrrrrrrr   aaaaaaaaaaaaa      ssssssssss   iiiiiii  k:::::k    kkkkkkk
+//             J:::::J  S:::::S           r::::rrr:::::::::r  a::::::::::::a   ss::::::::::s  i:::::i  k:::::k   k:::::k 
+//             J:::::J   S::::SSSS        r:::::::::::::::::r aaaaaaaaa:::::ass:::::::::::::s  i::::i  k:::::k  k:::::k  
+//             J:::::j    SS::::::SSSSS   rr::::::rrrrr::::::r         a::::as::::::ssss:::::s i::::i  k:::::k k:::::k   
+//             J:::::J      SSS::::::::SS  r:::::r     r:::::r  aaaaaaa:::::a s:::::s  ssssss  i::::i  k::::::k:::::k    
+// JJJJJJJ     J:::::J         SSSSSS::::S r:::::r     rrrrrrraa::::::::::::a   s::::::s       i::::i  k:::::::::::k     
+// J:::::J     J:::::J              S:::::Sr:::::r           a::::aaaa::::::a      s::::::s    i::::i  k:::::::::::k     
+// J::::::J   J::::::J              S:::::Sr:::::r          a::::a    a:::::assssss   s:::::s  i::::i  k::::::k:::::k    
+// J:::::::JJJ:::::::J  SSSSSSS     S:::::Sr:::::r          a::::a    a:::::as:::::ssss::::::si::::::ik::::::k k:::::k   
+//  JJ:::::::::::::JJ   S::::::SSSSSS:::::Sr:::::r          a:::::aaaa::::::as::::::::::::::s i::::::ik::::::k  k:::::k  
+//    JJ:::::::::JJ     S:::::::::::::::SS r:::::r           a::::::::::aa:::as:::::::::::ss  i::::::ik::::::k   k:::::k 
+//      JJJJJJJJJ        SSSSSSSSSSSSSSS   rrrrrrr            aaaaaaaaaa  aaaa sssssssssss    iiiiiiiikkkkkkkk    kkkkkkk
+//                                                                                                                      
+//                                                                                                                      
+
 // Doccumentation sur les Canvas
 // https://developer.mozilla.org/fr/docs/Tutoriel_canvas/Utilisation_d'images#D.C3.A9coupage
 
@@ -5,8 +25,8 @@
 const height = 250;
 const width = 600;
 const fps = 60;
-const gravity = 3;
-let debugLevel = 2;
+const gravity = 4;
+let debugLevel = 1;
 let debugMessage;
 let intervalStarted = false;
 
@@ -18,7 +38,7 @@ canvas.height = height;
 // Definition du context.
 const context = canvas.getContext("2d");
 
-// Definition du system de collision basique.
+// Definition du system de collision.
 const collision = [];
 for (let y = 0; y < height; y++) {
     collision[y] = [];
@@ -152,8 +172,12 @@ function showGrid() {
     }
 }
 
-//                                           Panneau de débogage
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function generateNumberBetween(min,max){
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+//                                             Panneau de débogage
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bbbbbbbb                                                  
 // DDDDDDDDDDDDD                           b::::::b                                                  
 // D::::::::::::DDD                        b::::::b                                                  
@@ -177,8 +201,9 @@ function showGrid() {
 //                                                                                g::::::ggg:::::::g 
 //                                                                                 gg:::::::::::::g  
 //                                                                                   ggg::::::ggg    
-//                                                                                      gggggg       
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      gggggg
+//       
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Debug {
     constructor() {
         this.textFont = "18px monospace";
@@ -205,8 +230,97 @@ class Debug {
 
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////                                                                                                                
+//                                                                                                        dddddddd
+//        GGGGGGGGGGGGG                                                                                   d::::::d
+//     GGG::::::::::::G                                                                                   d::::::d
+//   GG:::::::::::::::G                                                                                   d::::::d
+//  G:::::GGGGGGGG::::G                                                                                   d:::::d 
+// G:::::G       GGGGGGrrrrr   rrrrrrrrr      ooooooooooo   uuuuuu    uuuuuunnnn  nnnnnnnn        ddddddddd:::::d 
+// G:::::G              r::::rrr:::::::::r   oo:::::::::::oo u::::u    u::::un:::nn::::::::nn    dd::::::::::::::d 
+// G:::::G              r:::::::::::::::::r o:::::::::::::::ou::::u    u::::un::::::::::::::nn  d::::::::::::::::d 
+// G:::::G    GGGGGGGGGGrr::::::rrrrr::::::ro:::::ooooo:::::ou::::u    u::::unn:::::::::::::::nd:::::::ddddd:::::d 
+// G:::::G    G::::::::G r:::::r     r:::::ro::::o     o::::ou::::u    u::::u  n:::::nnnn:::::nd::::::d    d:::::d 
+// G:::::G    GGGGG::::G r:::::r     rrrrrrro::::o     o::::ou::::u    u::::u  n::::n    n::::nd:::::d     d:::::d 
+// G:::::G        G::::G r:::::r            o::::o     o::::ou::::u    u::::u  n::::n    n::::nd:::::d     d:::::d 
+//  G:::::G       G::::G r:::::r            o::::o     o::::ou:::::uuuu:::::u  n::::n    n::::nd:::::d     d:::::d 
+//   G:::::GGGGGGGG::::G r:::::r            o:::::ooooo:::::ou:::::::::::::::uun::::n    n::::nd::::::ddddd::::::dd
+//    GG:::::::::::::::G r:::::r            o:::::::::::::::o u:::::::::::::::un::::n    n::::n d:::::::::::::::::d
+//      GGG::::::GGG:::G r:::::r             oo:::::::::::oo   uu::::::::uu:::un::::n    n::::n  d:::::::::ddd::::d
+//         GGGGGG   GGGG rrrrrrr               ooooooooooo       uuuuuuuu  uuuunnnnnn    nnnnnn   ddddddddd   ddddd
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////                                                                                                              
 class Ground {
+    constructor() {
+        // pos[0] ordonnée y.
+        // pos[1] abscisse x.
+        this.pos = [220, 0];
+        this.imgLayout = new Image();
+        this.imgLayout.src = "./layout/ground.png";
+        this.imgHeight = 12;
+        this.imgWidth = 1800;
+        this.imgPosY = 0;
+        this.imgPosX = 0;
+    }
+    draw() {
+        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+    }
+    move() {
+        this.pos[1] -= 3;
+        if (this.pos[1] <= -1200) {
+            this.pos[1] = 0;
+        }
+        this.draw();
+    }
+
+}
+//                                             Gestion des nuages
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//                         IIIIIIIIIIIIII                    
+//                        IIIIIIIIIIIIIIIII                   
+//                      IIIIIIIIIIIIIIIIIII                   
+//                      IIIIIIIIIIIIIIIIIIIIIIIIIIIIII        
+//                  IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII        
+//                IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII    
+//        IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII  
+//       IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+//  II  IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+// IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+class Cloud {
+    constructor() {
+        // pos[0] ordonnée y.
+        // pos[1] abscisse x.
+        this.pos = [generateNumberBetween(20,140), 0];
+        this.imgLayout = new Image();
+        this.imgLayout.src = "./layout/cloud.png";
+        this.imgHeight = 13;
+        this.imgWidth = 46;
+        this.imgPosY = 0;
+        this.imgPosX = 0;
+        this.enabled = false;
+    }
+    draw() {
+        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+    }
+    enable() {
+        this.enabled = true;
+    }
+    disable() {
+        this.enabled = false;
+        this.pos = [generateNumberBetween(20,140), width];
+    }
+    move() {
+        if (this.enabled === true) {
+            this.pos[1] -= 2;
+            this.draw();
+        }
+        if (this.pos[1] < 0 - this.imgWidth) {
+            this.disable();
+        }
+    }
 
 }
 //                                             Gestion des cactus
@@ -258,7 +372,7 @@ class Ground {
 //              MMMMMMMMMMM               
 //              MMMMMMMMMMM               
 //              MMMMMMMMMMM               
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////                      
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////                 
 class Cactus {
     constructor() {
         // pos[0] ordonnée y.
@@ -303,36 +417,36 @@ class Cactus {
         }
     }
 }
-//                                          Gestion des dinosaures T-Rex
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                      MMMMMMMMMMMMMMMM  
-//                    MMMM  MMMMMMMMMMMMMM
-//                    MMMM  MMMMMMMMMMMMMM
-//                    MMMMMMMMMMMMMMMMMMMM
-//                    MMMMMMMMMMMMMMMMMMMM
-//                    MMMMMMMMMMMMMMMMMMMM
-//                    MMMMMMMMMM          
-//                    MMMMMMMMMM          
-//                    MMMMMMMMMMMMMMMM    
-//MM                MMMMMMMMMM            
-//MM             MMMMMMMMMMMMM            
-//MMMM        MMMMMMMMMMMMMMMMMMMM        
-//MMMM        MMMMMMMMMMMMMMMMMMMM        
-//MMMMMM    MMMMMMMMMMMMMMMMMM  MM        
-//MMMMMMMMMMMMMMMMMMMMMMMMMMMM            
-//MMMMMMMMMMMMMMMMMMMMMMMMMMMM            
-//  MMMMMMMMMMMMMMMMMMMMMMMMMM            
-//  MMMMMMMMMMMMMMMMMMMMMMMM              
-//    MMMMMMMMMMMMMMMMMMMMMM              
-//      MMMMMMMMMMMMMMMMMM                
-//        MMMMMMMMMMMMMM                  
-//          MMMMMM  MMMM                  
-//          MMMMMM  MMMM                  
-//          MMMM      MM                  
-//          MM        MM                  
-//          MMMM      MMMM                
-//          MMMM      MMMM                
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            Gestion des dinosaures T-Rex
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                       MMMMMMMMMMMMMMMM  
+//                     MMMM  MMMMMMMMMMMMMM
+//                     MMMM  MMMMMMMMMMMMMM
+//                     MMMMMMMMMMMMMMMMMMMM
+//                     MMMMMMMMMMMMMMMMMMMM
+//                     MMMMMMMMMMMMMMMMMMMM
+//                     MMMMMMMMMM          
+//                     MMMMMMMMMM          
+//                     MMMMMMMMMMMMMMMM    
+// MM                MMMMMMMMMM            
+// MM             MMMMMMMMMMMMM            
+// MMMM        MMMMMMMMMMMMMMMMMMMM        
+// MMMM        MMMMMMMMMMMMMMMMMMMM        
+// MMMMMM    MMMMMMMMMMMMMMMMMM  MM        
+// MMMMMMMMMMMMMMMMMMMMMMMMMMMM            
+// MMMMMMMMMMMMMMMMMMMMMMMMMMMM            
+//   MMMMMMMMMMMMMMMMMMMMMMMMMM            
+//   MMMMMMMMMMMMMMMMMMMMMMMM              
+//     MMMMMMMMMMMMMMMMMMMMMM              
+//       MMMMMMMMMMMMMMMMMM                
+//         MMMMMMMMMMMMMM                  
+//           MMMMMM  MMMM                  
+//           MMMMMM  MMMM                  
+//           MMMM      MM                  
+//           MM        MM                  
+//           MMMM      MMMM                
+//           MMMM      MMMM                
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class TRex {
     constructor() {
         // pos[0] ordonnée y.
@@ -366,7 +480,7 @@ class TRex {
             this.imgSteep = 0;
         }
         this.imgSteep++;
-        if(this.jumpInProgress===true || this.collisionY === false) {
+        if (this.jumpInProgress === true || this.collisionY === false) {
             this.imgPosY = 0;
             this.imgPosX = 0;
             this.imgSteep = 0;
@@ -452,7 +566,7 @@ class TRex {
         this.showCollision();
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Creation du ciel / fond d'ecran
@@ -460,8 +574,8 @@ let background = new Image();
 background.src = "./layout/background.png";
 
 // Creation du sol
-let ground = new Image();
-ground.src = "./layout/ground.png";
+///let ground = new Image();
+//ground.src = "./layout/ground.png";
 
 // Game Over
 let lGameOver = new Image();
@@ -473,11 +587,20 @@ let dinoJumpStart = false;
 let debug = new Debug();
 let player = new TRex();
 
-let cactus = []
+let cloud = [];
+cloud[0] = new Cloud();
+cloud[1] = new Cloud();
+cloud[2] = new Cloud();
+cloud[3] = new Cloud();
+cloud[4] = new Cloud();
+
+let cactus = [];
 cactus[0] = new Cactus();
-cactus[1] = new Cactus("rgba(0,255,0,0.5)");
-cactus[2] = new Cactus("rgba(255,115,0,0.5)");
+cactus[1] = new Cactus();
+cactus[2] = new Cactus();
 cactus[3] = new Cactus();
+
+let ground = new Ground();
 
 // Definition des evenents.
 document.addEventListener("keydown", function (event) {
@@ -520,8 +643,24 @@ function intervalLoop() {
     // Dessin du fond d'ecran.
     context.drawImage(background, 0, 0, 600, 250);
 
-    // Dessin du sol.
-    context.drawImage(ground, 0, 200, 884, 50);
+    ground.move();
+
+    if (renderedFrame % 24 === 23) {
+        cloud[1].enable();
+    }
+    if (renderedFrame % 60 === 59) {
+        cloud[2].enable();
+    }
+    if (renderedFrame % 90 === 89) {
+        cloud[3].enable();
+    }
+    if (renderedFrame % 130 === 129) {
+        cloud[4].enable();
+    }
+    cloud[0].move();
+    cloud[1].move();
+    cloud[2].move();
+    cloud[4].move();
 
     if (renderedFrame % 50 === 49) {
         cactus[1].enable();
