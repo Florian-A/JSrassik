@@ -5,7 +5,7 @@
 const height = 250;
 const width = 600;
 const fps = 60;
-const gravity = 1;
+const gravity = 3;
 let debugLevel = 2;
 let debugMessage;
 let intervalStarted = false;
@@ -26,14 +26,41 @@ for (let y = 0; y < height; y++) {
         collision[y][x] = { y: y, x: x, ground: 0, cactus: 0, leaf: 0 };
     }
 }
-// Definition de la collision avec sol.
-for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-        if (y >= 200) {
-            collision[y][x].ground = 1;
+
+function clearCollision() {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            collision[y][x].ground = 0;
+            collision[y][x].cactus = 0;
+            collision[y][x].leaf = 0;
+
         }
+    }
+}
+
+// Definition de la collision avec sol.
+function groundCollision() {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (y >= 222) {
+                collision[y][x].ground = 1;
+            }
+
+        }
+    }
+}
+
+function dumpCollision() {
+    let dump = ``;
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            dump += collision[y][x].cactus;
+        }
+        dump += `
+        `;
 
     }
+    console.log(dump);
 }
 
 function breakInterval() {
@@ -73,6 +100,31 @@ function showGroundCollision() {
     }
 }
 
+function showCatusCollision() {
+
+    if (debugLevel >= 2) {
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                if (collision[y][x].cactus === 1) {
+                    context.fillStyle = "rgba(0,255,0,0.5)";
+                    context.fillRect(x, y, 1, 1);
+                }
+                // Affichage du debut de la collision (carre rouge)
+                if (typeof (collision[y - 1]) !== "undefined" && typeof (collision[y - 1][x - 1]) !== "undefined") {
+                    if (typeof (collision[y - 1][x]) !== "undefined" && typeof (collision[y][x - 1]) !== "undefined") {
+                        if ((collision[y - 1][x].cactus === 0 && collision[y][x - 1].cactus === 0) && collision[y][x].cactus === 1) {
+                            context.fillStyle = "rgba(255,0,0,1)";
+                            context.fillRect(x, y, 5, 5);
+                        }
+                    }
+                }
+            }
+        }
+        context.stroke();
+
+    }
+}
+
 function showGrid() {
 
     let gridYStart = 0;
@@ -100,8 +152,33 @@ function showGrid() {
     }
 }
 
-
-// Panneau de debugage //
+//                                           Panneau de débogage
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// bbbbbbbb                                                  
+// DDDDDDDDDDDDD                           b::::::b                                                  
+// D::::::::::::DDD                        b::::::b                                                  
+// D:::::::::::::::DD                      b::::::b                                                  
+// DDD:::::DDDDD:::::D                      b:::::b                                                  
+//   D:::::D    D:::::D     eeeeeeeeeeee    b:::::bbbbbbbbb    uuuuuu    uuuuuu     ggggggggg   ggggg
+//   D:::::D     D:::::D  ee::::::::::::ee  b::::::::::::::bb  u::::u    u::::u    g:::::::::ggg::::g
+//   D:::::D     D:::::D e::::::eeeee:::::eeb::::::::::::::::b u::::u    u::::u   g:::::::::::::::::g
+//   D:::::D     D:::::De::::::e     e:::::eb:::::bbbbb:::::::bu::::u    u::::u  g::::::ggggg::::::gg
+//   D:::::D     D:::::De:::::::eeeee::::::eb:::::b    b::::::bu::::u    u::::u  g:::::g     g:::::g 
+//   D:::::D     D:::::De:::::::::::::::::e b:::::b     b:::::bu::::u    u::::u  g:::::g     g:::::g 
+//   D:::::D     D:::::De::::::eeeeeeeeeee  b:::::b     b:::::bu::::u    u::::u  g:::::g     g:::::g 
+//   D:::::D    D:::::D e:::::::e           b:::::b     b:::::bu:::::uuuu:::::u  g::::::g    g:::::g 
+// DDD:::::DDDDD:::::D  e::::::::e          b:::::bbbbbb::::::bu:::::::::::::::uug:::::::ggggg:::::g 
+// D:::::::::::::::DD    e::::::::eeeeeeee  b::::::::::::::::b  u:::::::::::::::u g::::::::::::::::g 
+// D::::::::::::DDD       ee:::::::::::::e  b:::::::::::::::b    uu::::::::uu:::u  gg::::::::::::::g 
+// DDDDDDDDDDDDD            eeeeeeeeeeeeee  bbbbbbbbbbbbbbbb       uuuuuuuu  uuuu    gggggggg::::::g 
+//                                                                                           g:::::g 
+//                                                                               gggggg      g:::::g 
+//                                                                               g:::::gg   gg:::::g 
+//                                                                                g::::::ggg:::::::g 
+//                                                                                 gg:::::::::::::g  
+//                                                                                   ggg::::::ggg    
+//                                                                                      gggggg       
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Debug {
     constructor() {
         this.textFont = "18px monospace";
@@ -128,8 +205,12 @@ class Debug {
 
     }
 }
-// Gestion des cactus
-//////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class Ground {
+
+}
+//                                             Gestion des cactus
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                        
 //                MMMMMMMM                
 //              MMMMMMMMMMM               
@@ -177,12 +258,12 @@ class Debug {
 //              MMMMMMMMMMM               
 //              MMMMMMMMMMM               
 //              MMMMMMMMMMM               
-//////////////////////////////////////////////                       
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////                      
 class Cactus {
     constructor() {
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
-        this.pos = [160, width];
+        this.pos = [177, width];
         this.imgLayout = new Image();
         this.imgLayout.src = "./layout/obstacle.png";
         this.imgHeight = 50;
@@ -200,36 +281,7 @@ class Cactus {
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
                     collision[y][x].cactus = 1;
                 }
-                else if (collision[y][x].cactus === 0) {
-                    collision[y][x].cactus = 0;
-                }
-                else {
-                    collision[y][x].cactus = 0;
-                }
             }
-        }
-    }
-    showCollision() {
-        if (debugLevel >= 2) {
-            for (let y = 0; y < height; y++) {
-
-                for (let x = 0; x < width; x++) {
-
-                    if (collision[y][x].cactus === 1) {
-                        context.fillStyle = "rgba(0,0,0,0.5)";
-                        context.fillRect(x, y, 1, 1);
-                    }
-                    if (typeof (collision[y - 1]) !== "undefined" && typeof (collision[y - 1][x - 1]) !== "undefined") {
-                        if (typeof (collision[y - 1][x]) !== "undefined" && typeof (collision[y][x - 1]) !== "undefined") {
-                            if ((collision[y - 1][x].cactus === 0 && collision[y][x - 1].cactus === 0) && collision[y][x].cactus === 1) {
-                                context.fillStyle = "rgba(255,0,0,1)";
-                                context.fillRect(x, y, 5, 5);
-                            }
-                        }
-                    }
-                }
-            }
-            context.stroke();
         }
     }
     enable() {
@@ -237,22 +289,22 @@ class Cactus {
     }
     disable() {
         this.enabled = false;
-        this.pos = [160, width];
+        this.pos = [177, width];
     }
     move() {
         if (this.enabled === true) {
-            this.pos[1] -= 1;
+            this.pos[1] -= 3;
             this.collision();
             this.draw();
-            this.showCollision();
+            //this.showCollision();
         }
         if (this.pos[1] < 0 - this.imgWidth) {
             this.disable();
         }
     }
 }
-// Gestion des dinosaures T-Rex
-//////////////////////////////////////////////
+//                                          Gestion des dinosaures T-Rex
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                      MMMMMMMMMMMMMMMM  
 //                    MMMM  MMMMMMMMMMMMMM
 //                    MMMM  MMMMMMMMMMMMMM
@@ -280,7 +332,7 @@ class Cactus {
 //          MM        MM                  
 //          MMMM      MMMM                
 //          MMMM      MMMM                
-//////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class TRex {
     constructor() {
         // pos[0] ordonnée y.
@@ -296,6 +348,8 @@ class TRex {
         this.posCollision = [this.pos[0] + this.imgHeight, this.pos[1] + this.imgWidth];
         this.collisionY = false;
         this.collisionX = false;
+        this.jumpInProgress = false;
+        this.roofOfJump = 70;
     }
     draw() {
         if (this.imgSteep <= 6) {
@@ -312,6 +366,11 @@ class TRex {
             this.imgSteep = 0;
         }
         this.imgSteep++;
+        if(this.jumpInProgress===true || this.collisionY === false) {
+            this.imgPosY = 0;
+            this.imgPosX = 0;
+            this.imgSteep = 0;
+        }
         context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
     }
     gravity() {
@@ -353,10 +412,11 @@ class TRex {
             this.collisionX = false;
         }
 
-        debugMessage='Y:';
-        debugMessage+=this.collisionY;
-        debugMessage+='X:';
-        debugMessage+=this.collisionX;
+        debugMessage = 'Y:';
+        debugMessage += this.collisionY;
+        debugMessage += ' ';
+        debugMessage += 'X:';
+        debugMessage += this.collisionX;
     }
     showCollision() {
         if (debugLevel >= 2) {
@@ -368,31 +428,31 @@ class TRex {
         }
     }
     jump() {
-        if (this.pos[0] > 100) {
-            this.pos[0] = this.pos[0] - 100;
+        this.collisionY = false;
+        this.jumpInProgress = true;
+    }
+    jumpControl() {
+        if (this.jumpInProgress === true && this.pos[0] >= this.roofOfJump) {
+            this.pos[0] = Math.round(this.pos[0] * 0.92);
         }
         else {
-            this.pos[0] = 0;
+            this.jumpInProgress = false;
         }
-        this.collisionY = false;
     }
-    move(posY, posX) {
-        if (this.collisionY === false) {
-            this.pos[0] = this.pos[0] + posY;
+    move() {
+
+        if (collision[this.posCollision[0]][this.posCollision[1] + 30].cactus === 1) {
+            this.jump();
         }
-        if (this.collisionX === false) {
-            this.pos[1] = this.pos[1] + posX;
-        }
-        //if (collision[this.pos[0]][this.pos[1] + 30].cactus === 1 || collision[this.pos[0]][this.pos[1]].cactus === 1 && collision[this.pos[0] - 1][this.pos[1]].cactus === 0) {
-        if (collision[this.pos[0]][this.pos[1] + 30].cactus === 1) {
-            //this.jump();
-        }
+
+        this.jumpControl();
         this.gravity();
         this.collision();
         this.draw();
         this.showCollision();
     }
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Creation du ciel / fond d'ecran
@@ -415,8 +475,8 @@ let player = new TRex();
 
 let cactus = []
 cactus[0] = new Cactus();
-cactus[1] = new Cactus();
-cactus[2] = new Cactus();
+cactus[1] = new Cactus("rgba(0,255,0,0.5)");
+cactus[2] = new Cactus("rgba(255,115,0,0.5)");
 cactus[3] = new Cactus();
 
 // Definition des evenents.
@@ -454,6 +514,9 @@ function intervalLoop() {
     debug.startPerfMeasurement();
     renderedFrame++;
 
+    clearCollision();
+    groundCollision();
+
     // Dessin du fond d'ecran.
     context.drawImage(background, 0, 0, 600, 250);
 
@@ -466,12 +529,17 @@ function intervalLoop() {
     if (renderedFrame % 100 === 99) {
         cactus[2].enable();
     }
-    //cactus[0].move();
+    if (renderedFrame % 300 === 299) {
+        cactus[3].enable();
+    }
+    cactus[0].move();
     cactus[1].move();
     cactus[2].move();
+    cactus[3].move();
 
     player.move(0, 0);
     showGroundCollision();
+    showCatusCollision();
     showGrid();
 
     debug.draw();
