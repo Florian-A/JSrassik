@@ -19,12 +19,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-function generateNumberBetween(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 //         .d8888b.   .d88888b.  888      888      8888888  .d8888b. 8888888  .d88888b.  888b    888 
@@ -601,6 +595,10 @@ cactus[3] = new Cactus();
 // Creation du ciel / fond d'ecran
 let background = new Image();
 background.src = "./layout/background.png";
+
+function generateNumberBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
 
 class Core {
     constructor() {
