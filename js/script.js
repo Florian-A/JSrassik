@@ -444,24 +444,25 @@ class Pterodactyl {
         this.collisionX = false;
         this.jumpInProgress = false;
         this.roofOfJump = 70;
+        this.rotateDeg = 0;
         this.setHotKey();
     }
     draw() {
-        if (this.imgSteep <= 9) {
+        if (this.imgSteep <= 6) {
             this.imgPosY = 0;
             this.imgPosX = 0;
         }
-        else if (this.imgSteep <= 13) {
-            this.imgPosY = 6;
+        else if (this.imgSteep <= 11) {
+            this.imgPosY = 0;
             this.imgPosX = 46;
         }
         else {
-            this.imgPosY = 6;
+            this.imgPosY = 0;
             this.imgPosX = 46;
             this.imgSteep = 0;
         }
         this.imgSteep++;
-        drawImageRot(this.imgLayout, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight,45);
+        drawImageRot(this.imgLayout,this.imgPosX,this.imgPosY,this.imgWidth,this.imgHeight,this.pos[1],this.pos[0],this.rotateDeg)
     }
     gravity() {
         if (this.collisionY === false) {
@@ -524,9 +525,11 @@ class Pterodactyl {
     jumpControl() {
         if (this.jumpInProgress === true && this.pos[0] >= this.roofOfJump) {
             this.pos[0] = Math.round(this.pos[0] * 0.92);
+            this.rotateDeg -= 1;
         }
         else {
             this.jumpInProgress = false;
+            this.rotateDeg = 0;
         }
     }
     setHotKey() {
@@ -549,35 +552,7 @@ class Pterodactyl {
     }
 }
 
-function rowRotateImage(x, y, angle, imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,pos1,pos0,imgWidth,imgHeight) { 
- 
-	context.save(); 
-	context.translate(x, y);
-	context.rotate(angle * Math.PI/180);
-    context.drawImage(imgLayout, imgPosX, imgPosY, imgWidth, imgHeight, pos1, pos0, -imgWidth, -imgHeight);
-	context.restore(); 
-}
 
-//context.drawImage(imgLayout, imgPosX, imgPosY, imgWidth, imgHeight, pos1, pos0, -imgWidth, -imgHeight);
-
-function drawImageRot(imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,imgDeg){
-
-    //Conversion de degre vers 
-    let radian = imgDeg * Math.PI / 180;
-
-    //Definition de l'origine de l'image a son centre.
-    context.translate(imgPosX + imgWidth / 2, imgPosY + imgHeight / 2);
-
-    //Rotation.
-    context.rotate(radian);
-
-    //Impression de l'image.   
-    context.drawImage(imgLayout,imgWidth / 2 * (-1),imgHeight / 2 * (-1),imgWidth,imgHeight);
-
-    //Remise a zero du canvas.
-    context.rotate(radian * ( -1 ) );
-    context.translate((imgPosX + imgWidth / 2) * (-1), (imgPosY + imgHeight / 2) * (-1));
-}
 
 //                                             Panneau de débogage
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -767,6 +742,25 @@ cactus[3] = new Cactus();
 // Creation du ciel / fond d'ecran
 let background = new Image();
 background.src = "./layout/background.png";
+
+function drawImageRot(imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,pos1,pos0,imgDeg){
+
+    //Conversion de degre vers 
+    let radian = imgDeg * Math.PI / 180;
+
+    //Definition de l'origine de l'image a son centre.
+    context.translate(pos1 + imgWidth / 2, pos0 + imgHeight / 2);
+
+    //Rotation.
+    context.rotate(radian);
+
+    //Impression de l'image.
+    context.drawImage(imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,imgHeight / 2 * (-1),imgWidth / 2 * (-1),imgWidth,imgHeight);
+
+    //Remise a zero du canvas.
+    context.rotate(radian * ( -1 ) );
+    context.translate((pos1 + imgWidth / 2) * (-1), (pos0 + imgHeight / 2) * (-1));
+}
 
 function generateNumberBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
