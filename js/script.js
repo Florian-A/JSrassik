@@ -408,6 +408,147 @@ class TRex {
         this.showCollision();
     }
 }
+//                                            Gestion des dinosaures Pterodactyl
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                   
+//                                                             ZZ             
+//                                                           ZZZZ             
+//                                                         ZZZZZZ             
+//                                                        ZZZZZ    ZZZ        
+//                                                      ZZZZZZZ    ZZZZZ      
+//                                                    ZZZZZZZZZ  ZZZZZZZZZ    
+//                                                  ZZZZZZZZZZZ  ZZZZZZZZZZZ  
+//                                                  ZZZZZZZZZZZ  ZZZZZZZZZZZ  
+//                                                  ZZZZZZZZZZZZZZZZZZZZZZZZZZ
+//                                                ZZZZZZZZZZZZZZZZZ           
+//                                     ZZZZZZZZZZZZZZZZZZZZZZZZZZ             
+//                                           ZZZZZZZZZZZZZZZZZZ               
+//                                       ZZZZZZZZZZZZZZZZZZZZ                 
+//                                             ZZZZZZZZZZZZ                   
+//                                                                                                          
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class Pterodactyl {
+    constructor() {
+        // pos[0] ordonnée y.
+        // pos[1] abscisse x.
+        this.pos = [110, 100];
+        this.imgLayout = new Image();
+        this.imgLayout.src = "./layout/ptero.png";
+        this.imgHeight = 36;
+        this.imgWidth = 42;
+        this.imgPosY = 0;
+        this.imgPosX = 82;
+        this.imgSteep = 0;
+        this.posCollision = [this.pos[0] + this.imgHeight-5, this.pos[1] + this.imgWidth];
+        this.collisionY = false;
+        this.collisionX = false;
+        this.jumpInProgress = false;
+        this.roofOfJump = 70;
+        this.setHotKey();
+    }
+    draw() {
+        if (this.imgSteep <= 9) {
+            this.imgPosY = 0;
+            this.imgPosX = 0;
+        }
+        else if (this.imgSteep <= 13) {
+            this.imgPosY = 6;
+            this.imgPosX = 46;
+        }
+        else {
+            this.imgPosY = 6;
+            this.imgPosX = 46;
+            this.imgSteep = 0;
+        }
+        this.imgSteep++;
+        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+    }
+    gravity() {
+        if (this.collisionY === false) {
+            this.pos[0] += gravity;
+        }
+    }
+    localCollision() {
+        this.posCollision = [this.pos[0] + this.imgHeight-5, this.pos[1] + this.imgWidth];
+
+        let collisionY;
+        for (let index = 0; index <= this.imgWidth; index++) {
+
+            if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                collisionY = true;
+            }
+        }
+        if (collisionY == true) {
+            this.collisionY = true;
+        }
+        else {
+            this.collisionY = false;
+        }
+        if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
+            this.collisionY = true;
+        }
+
+        let collisionX;
+        for (let index = 0; index <= this.imgHeight; index++) {
+
+            if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                collisionX = true;
+            }
+        }
+        if (collisionX == true) {
+            this.collisionX = true;
+        }
+        else {
+            this.collisionX = false;
+        }
+
+        debugMessage = 'Y:';
+        debugMessage += this.collisionY;
+        debugMessage += ' ';
+        debugMessage += 'X:';
+        debugMessage += this.collisionX;
+    }
+    showCollision() {
+        if (debugLevel >= 2) {
+            context.fillStyle = "rgba(0,0,0,0.5)";
+            context.fillRect(this.pos[1], this.pos[0], this.posCollision[1] - this.pos[1], this.posCollision[0] - this.pos[0]);
+            context.fillStyle = "rgba(255,0,0,1)";
+            context.fillRect(this.pos[1], this.pos[0], 5, 5);
+            context.stroke();
+        }
+    }
+    jump() {
+        this.collisionY = false;
+        this.jumpInProgress = true;
+    }
+    jumpControl() {
+        if (this.jumpInProgress === true && this.pos[0] >= this.roofOfJump) {
+            this.pos[0] = Math.round(this.pos[0] * 0.92);
+        }
+        else {
+            this.jumpInProgress = false;
+        }
+    }
+    setHotKey() {
+        document.addEventListener("keydown", (event) => {
+            if (event.which === 32) {
+                this.jump();
+            }
+        })
+    }
+    move() {
+
+        if (collisionArray[this.posCollision[0]][this.posCollision[1] + 30].cactus === 1) {
+            this.jump();
+        }
+
+        this.jumpControl();
+        this.gravity();
+        this.localCollision();
+        this.draw();
+        this.showCollision();
+    }
+}
 //                                             Panneau de débogage
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  
@@ -577,7 +718,8 @@ let renderedFrame = 0;
 
 let collision = new Collision();
 let ground = new Ground();
-let player = new TRex();
+//let player = new TRex();
+let player = new Pterodactyl();
 let debug = new Debug();
 
 let cloud = [];
