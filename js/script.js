@@ -461,7 +461,7 @@ class Pterodactyl {
             this.imgSteep = 0;
         }
         this.imgSteep++;
-        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+        drawImageRot(this.imgLayout, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight,45);
     }
     gravity() {
         if (this.collisionY === false) {
@@ -541,7 +541,6 @@ class Pterodactyl {
         if (collisionArray[this.posCollision[0]][this.posCollision[1] + 30].cactus === 1) {
             this.jump();
         }
-
         this.jumpControl();
         this.gravity();
         this.localCollision();
@@ -549,6 +548,37 @@ class Pterodactyl {
         this.showCollision();
     }
 }
+
+function rowRotateImage(x, y, angle, imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,pos1,pos0,imgWidth,imgHeight) { 
+ 
+	context.save(); 
+	context.translate(x, y);
+	context.rotate(angle * Math.PI/180);
+    context.drawImage(imgLayout, imgPosX, imgPosY, imgWidth, imgHeight, pos1, pos0, -imgWidth, -imgHeight);
+	context.restore(); 
+}
+
+//context.drawImage(imgLayout, imgPosX, imgPosY, imgWidth, imgHeight, pos1, pos0, -imgWidth, -imgHeight);
+
+function drawImageRot(imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,imgDeg){
+
+    //Conversion de degre vers 
+    let radian = imgDeg * Math.PI / 180;
+
+    //Definition de l'origine de l'image a son centre.
+    context.translate(imgPosX + imgWidth / 2, imgPosY + imgHeight / 2);
+
+    //Rotation.
+    context.rotate(radian);
+
+    //Impression de l'image.   
+    context.drawImage(imgLayout,imgWidth / 2 * (-1),imgHeight / 2 * (-1),imgWidth,imgHeight);
+
+    //Remise a zero du canvas.
+    context.rotate(radian * ( -1 ) );
+    context.translate((imgPosX + imgWidth / 2) * (-1), (imgPosY + imgHeight / 2) * (-1));
+}
+
 //                                             Panneau de débogage
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  
@@ -686,7 +716,6 @@ class Debug {
         this.displayCatusCollision();
         this.displayGroundCollision();
         this.displayGrid();
-
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
