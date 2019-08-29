@@ -31,7 +31,8 @@
 //         "Y8888P"   "Y88888P"  88888888 88888888 8888888  "Y8888P" 8888888  "Y88888P"  888    Y888 
 // 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-collisionArray = [];
+let collisionArray = [];
+let clearedCollisionArray = [];
 class Collision {
     constructor() {
         this.initCollision();
@@ -44,18 +45,12 @@ class Collision {
                 collisionArray[y][x] = { y: y, x: x, ground: 0, cactus: 0, leaf: 0 };
             }
         }
+        clearedCollisionArray = collisionArray;
     }
 
     clearCollision() {
-        for (let y = 0; y < height; y++) {
-            //collisionArray.fill({})
-            for (let x = 0; x < width; x++) {
-                collisionArray[y][x].ground = 0;
-                collisionArray[y][x].cactus = 0;
-                collisionArray[y][x].leaf = 0;
+        collisionArray = clearedCollisionArray;
 
-            }
-        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////           //                                                                                    
@@ -216,6 +211,7 @@ class Cactus {
         this.imgWidth = 25;
         this.imgPosY = 0;
         this.imgPosX = 0;
+        this.movementSpeed = 3;
         this.enabled = false;
     }
     draw() {
@@ -224,8 +220,13 @@ class Cactus {
     localCollision() {
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
+
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
                     collisionArray[y][x].cactus = 1;
+
+                    if (typeof (collisionArray[y][x + this.movementSpeed]) !== "undefined")  {
+                            collisionArray[y][x + this.movementSpeed].cactus = 0;
+                    }
                 }
             }
         }
@@ -467,7 +468,7 @@ class Debug {
         if (debugLevel >= 2) {
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
-                    if (collisionArray[y][0].ground === 1 && collisionArray[y - 1][0].ground == 0) {
+                    if (collisionArray[y][0].ground === 1 && collisionArray[y - 1][0].ground === 0) {
                         groundYStart = collisionArray[y][0].y;
                     }
                 }
@@ -518,7 +519,7 @@ class Debug {
         let dump = ``;
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
-                dump += collisionArray[y][x].cactus;
+                dump += collisionArray[y][x].ground;
             }
             dump += `
             `;
@@ -566,7 +567,7 @@ const context = canvas.getContext("2d");
 
 const height = 250;
 const width = 600;
-const fps = 60;
+const fps = 58;
 const gravity = 4;
 
 let debugLevel = 1;
