@@ -42,7 +42,7 @@ class Collision {
         for (let y = 0; y < height; y++) {
             collisionArray[y] = [];
             for (let x = 0; x < width; x++) {
-                collisionArray[y][x] = { y: y, x: x, ground: 0, cactus: 0, leaf: 0 };
+                collisionArray[y][x] = { y: y, x: x, ground: 0, cactus: 0, leaf: 0, trex: 0 };
             }
         }
         clearedCollisionArray = collisionArray;
@@ -224,8 +224,8 @@ class Cactus {
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
                     collisionArray[y][x].cactus = 1;
 
-                    if (typeof (collisionArray[y][x + this.movementSpeed]) !== "undefined")  {
-                            collisionArray[y][x + this.movementSpeed].cactus = 0;
+                    if (typeof (collisionArray[y][x + this.movementSpeed]) !== "undefined") {
+                        collisionArray[y][x + this.movementSpeed].cactus = 0;
                     }
                 }
             }
@@ -285,7 +285,7 @@ class TRex {
     constructor() {
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
-        this.pos = [110, 100];
+        this.pos = [117, width + 30];
         this.imgLayout = new Image();
         this.imgLayout.src = "./layout/dino.png";
         this.imgHeight = 43;
@@ -298,7 +298,8 @@ class TRex {
         this.collisionX = false;
         this.jumpInProgress = false;
         this.roofOfJump = 70;
-        this.setHotKey();
+        this.enabled = false;
+        //this.setHotKey();
     }
     draw() {
         if (this.imgSteep <= 6) {
@@ -333,9 +334,14 @@ class TRex {
         let collisionY;
         for (let index = 0; index <= this.imgWidth; index++) {
 
-            if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
-                collisionY = true;
+
+            if (typeof (collisionArray[this.posCollision[0]][this.pos[1] + index]) !== "undefined") {
+
+                if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                    collisionY = true;
+                }
             }
+
         }
         if (collisionY == true) {
             this.collisionY = true;
@@ -343,16 +349,21 @@ class TRex {
         else {
             this.collisionY = false;
         }
-        if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
-            this.collisionY = true;
+        if (typeof (collisionArray[this.posCollision[0]][this.posCollision[1]]) !== "undefined") {
+            if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
+                this.collisionY = true;
+            }
         }
 
         let collisionX;
         for (let index = 0; index <= this.imgHeight; index++) {
 
-            if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
-                collisionX = true;
+            if (typeof (collisionArray[this.posCollision[0]][this.pos[1] + index]) !== "undefined") {
+                if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                    collisionX = true;
+                }
             }
+
         }
         if (collisionX == true) {
             this.collisionX = true;
@@ -361,20 +372,29 @@ class TRex {
             this.collisionX = false;
         }
 
-        debugMessage = 'Y:';
-        debugMessage += this.collisionY;
-        debugMessage += ' ';
-        debugMessage += 'X:';
-        debugMessage += this.collisionX;
-    }
-    showCollision() {
-        if (debugLevel >= 2) {
-            context.fillStyle = "rgba(0,0,0,0.5)";
-            context.fillRect(this.pos[1], this.pos[0], this.posCollision[1] - this.pos[1], this.posCollision[0] - this.pos[0]);
-            context.fillStyle = "rgba(255,0,0,1)";
-            context.fillRect(this.pos[1], this.pos[0], 5, 5);
-            context.stroke();
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+
+                if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
+                    collisionArray[y][x].trex = 1;
+
+                    if (typeof (collisionArray[y][x + this.imgWidth + 5]) !== "undefined") {
+                        collisionArray[y][x + this.imgWidth + 5].trex = 0;
+                    }
+
+                    if (typeof (collisionArray[y + 10][x + 5]) !== "undefined") {
+                        collisionArray[y + 10][x + 5].trex = 0;
+                    }
+
+                    if (typeof (collisionArray[y - this.imgHeight][x + 10]) !== "undefined") {
+                        collisionArray[y - this.imgHeight][x + 10].trex = 0;
+                    }
+                }
+            }
         }
+
+
+
     }
     jump() {
         this.collisionY = false;
@@ -395,17 +415,33 @@ class TRex {
             }
         })
     }
+    enable() {
+        this.enabled = true;
+    }
+    disable() {
+        this.enabled = false;
+        this.pos = [160, width];
+    }
     move() {
 
-        if (collisionArray[this.posCollision[0]][this.posCollision[1] + 30].cactus === 1) {
-            this.jump();
-        }
+        if (this.enabled === true) {
+            this.pos[1] -= 5;
+            this.localCollision();
+            this.jumpControl();
+            this.gravity();
 
-        this.jumpControl();
-        this.gravity();
-        this.localCollision();
-        this.draw();
-        this.showCollision();
+            if (typeof (collisionArray[this.pos[0]][this.pos[1] - 10]) !== "undefined") {
+                if (collisionArray[this.pos[0]][this.pos[1] - 10].cactus === 1) {
+                    this.jump();
+                }
+            }
+
+
+            this.draw();
+        }
+        if (this.pos[1] < -20) {
+            this.disable();
+        }
     }
 }
 //                                            Gestion des dinosaures Pterodactyl
@@ -431,7 +467,7 @@ class Pterodactyl {
     constructor() {
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
-        this.pos = [110, 100];
+        this.pos = [70, 100];
         this.imgLayout = new Image();
         this.imgLayout.src = "./layout/ptero.png";
         this.imgHeight = 36;
@@ -439,11 +475,13 @@ class Pterodactyl {
         this.imgPosY = 0;
         this.imgPosX = 82;
         this.imgSteep = 0;
-        this.posCollision = [this.pos[0] + this.imgHeight-5, this.pos[1] + this.imgWidth];
+        this.posCollision = [this.pos[0] + this.imgHeight - 13, this.pos[1] + this.imgWidth - 3];
         this.collisionY = false;
         this.collisionX = false;
+        this.trexCollision = false;
         this.jumpInProgress = false;
-        this.roofOfJump = 70;
+        this.inFalling = false;
+        this.roofOfJump = 50;
         this.rotateDeg = 0;
         this.setHotKey();
     }
@@ -462,7 +500,7 @@ class Pterodactyl {
             this.imgSteep = 0;
         }
         this.imgSteep++;
-        drawImageRot(this.imgLayout,this.imgPosX,this.imgPosY,this.imgWidth,this.imgHeight,this.pos[1],this.pos[0],this.rotateDeg)
+        drawImageRot(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.rotateDeg)
     }
     gravity() {
         if (this.collisionY === false) {
@@ -470,7 +508,7 @@ class Pterodactyl {
         }
     }
     localCollision() {
-        this.posCollision = [this.pos[0] + this.imgHeight-5, this.pos[1] + this.imgWidth];
+        this.posCollision = [this.pos[0] + this.imgHeight - 13, this.pos[1] + this.imgWidth - 3];
 
         let collisionY;
         for (let index = 0; index <= this.imgWidth; index++) {
@@ -502,12 +540,6 @@ class Pterodactyl {
         else {
             this.collisionX = false;
         }
-
-        debugMessage = 'Y:';
-        debugMessage += this.collisionY;
-        debugMessage += ' ';
-        debugMessage += 'X:';
-        debugMessage += this.collisionX;
     }
     showCollision() {
         if (debugLevel >= 2) {
@@ -519,16 +551,29 @@ class Pterodactyl {
         }
     }
     jump() {
+        this.rotateDeg = 0;
         this.collisionY = false;
         this.jumpInProgress = true;
+        this.inFalling = false;
     }
     jumpControl() {
         if (this.jumpInProgress === true && this.pos[0] >= this.roofOfJump) {
-            this.pos[0] = Math.round(this.pos[0] * 0.92);
+            this.pos[0] = Math.round(this.pos[0] * 0.90);
             this.rotateDeg -= 1;
+        }
+        else if (!this.collisionY && this.rotateDeg <= 0) {
+            this.jumpInProgress = false;
+            this.inFalling = true;
+            this.rotateDeg += 4;
+        }
+        else if (!this.collisionY) {
+            this.jumpInProgress = false;
+            this.inFalling = true;
+            this.rotateDeg += 1;
         }
         else {
             this.jumpInProgress = false;
+            this.inFalling = true;
             this.rotateDeg = 0;
         }
     }
@@ -539,10 +584,27 @@ class Pterodactyl {
             }
         })
     }
+    autoPlay() {
+        if (collisionArray[this.posCollision[0] + 15][this.posCollision[1]].ground === 1 || collisionArray[this.posCollision[0] + 15][this.posCollision[1]].cactus === 1) {
+            this.jump();
+        }
+    }
     move() {
 
-        if (collisionArray[this.posCollision[0]][this.posCollision[1] + 30].cactus === 1) {
-            this.jump();
+        if(this.collisionY){
+            gameOver=true;
+        }
+        else if(this.collisionX){
+            gameOver=true;
+        }
+
+        if (collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
+            this.trexCollision = true;
+            score+=1;
+            debugMessage = score;
+        }
+        else {
+            this.trexCollision = false;
         }
         this.jumpControl();
         this.gravity();
@@ -551,8 +613,6 @@ class Pterodactyl {
         this.showCollision();
     }
 }
-
-
 
 //                                             Panneau de débogage
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -590,14 +650,19 @@ class Debug {
                         context.fillStyle = "rgba(0,255,0,0.5)";
                         context.fillRect(x, y, 1, 1);
                     }
-                    // Affichage du debut de la collision (carre rouge)
-                    if (typeof (collisionArray[y - 1]) !== "undefined" && typeof (collisionArray[y - 1][x - 1]) !== "undefined") {
-                        if (typeof (collisionArray[y - 1][x]) !== "undefined" && typeof (collisionArray[y][x - 1]) !== "undefined") {
-                            if ((collisionArray[y - 1][x].cactus === 0 && collisionArray[y][x - 1].cactus === 0) && collisionArray[y][x].cactus === 1) {
-                                context.fillStyle = "rgba(255,0,0,1)";
-                                context.fillRect(x, y, 5, 5);
-                            }
-                        }
+                }
+            }
+            context.stroke();
+        }
+    }
+    // Affichage de la collision avec les T-Rex.
+    displayTrexCollision() {
+        if (debugLevel >= 2) {
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (collisionArray[y][x].trex === 1) {
+                        context.fillStyle = "rgba(255,0,0,0.5)";
+                        context.fillRect(x, y, 1, 1);
                     }
                 }
             }
@@ -689,6 +754,7 @@ class Debug {
     draw() {
         this.displayDebugMenu();
         this.displayCatusCollision();
+        this.displayTrexCollision();
         this.displayGroundCollision();
         this.displayGrid();
     }
@@ -719,12 +785,20 @@ let debugLevel = 1;
 let debugMessage;
 let intervalStarted = false;
 let renderedFrame = 0;
+let gameOver = false;
+let score = 0;
 
 let collision = new Collision();
 let ground = new Ground();
-//let player = new TRex();
 let player = new Pterodactyl();
 let debug = new Debug();
+
+let trex = [];
+trex[0] = new TRex();
+trex[1] = new TRex();
+trex[2] = new TRex();
+trex[3] = new TRex();
+trex[4] = new TRex();
 
 let cloud = [];
 cloud[0] = new Cloud();
@@ -743,7 +817,7 @@ cactus[3] = new Cactus();
 let background = new Image();
 background.src = "./layout/background.png";
 
-function drawImageRot(imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,pos1,pos0,imgDeg){
+function drawImageRot(imgLayout, imgPosX, imgPosY, imgWidth, imgHeight, pos1, pos0, imgDeg) {
 
     //Conversion de degre vers 
     let radian = imgDeg * Math.PI / 180;
@@ -755,10 +829,10 @@ function drawImageRot(imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,pos1,pos0,img
     context.rotate(radian);
 
     //Impression de l'image.
-    context.drawImage(imgLayout,imgPosX,imgPosY,imgWidth,imgHeight,imgHeight / 2 * (-1),imgWidth / 2 * (-1),imgWidth,imgHeight);
+    context.drawImage(imgLayout, imgPosX, imgPosY, imgWidth, imgHeight, imgHeight / 2 * (-1), imgWidth / 2 * (-1), imgWidth, imgHeight);
 
     //Remise a zero du canvas.
-    context.rotate(radian * ( -1 ) );
+    context.rotate(radian * (-1));
     context.translate((pos1 + imgWidth / 2) * (-1), (pos0 + imgHeight / 2) * (-1));
 }
 
@@ -794,12 +868,14 @@ class Core {
         document.addEventListener('keydown', (event) => {
             if (event.which === 36) {
                 this.startInterval();
+                gameOver=false;
             }
             if (event.which === 35) {
                 this.breakInterval();
             }
             if (event.which === 45) {
                 this.nextInterval();
+                gameOver=false;
             }
         })
     }
@@ -808,6 +884,11 @@ class Core {
         debug.startPerfMeasurement();
         collision.clearCollision();
         renderedFrame++;
+
+        if(gameOver)
+        {
+            this.breakInterval();
+        }
 
         // Dessin du fond d'ecran.
         context.drawImage(background, 0, 0, 600, 250);
@@ -845,11 +926,23 @@ class Core {
         cactus[2].move();
         cactus[3].move();
 
+
+        if (renderedFrame % 50 === 49) {
+            trex[0].enable();
+        }
+        if (renderedFrame % 100 === 99) {
+            trex[1].enable();
+        }
+        if (renderedFrame % 300 === 299) {
+            trex[2].enable();
+        }
+        trex[0].move();
+        trex[1].move();
+        trex[2].move();
+        trex[3].move();
+
         player.move();
         debug.draw();
     }
-
-
-
 }
 let core = new Core();
