@@ -298,6 +298,7 @@ class TRex {
         this.collisionX = false;
         this.jumpInProgress = false;
         this.roofOfJump = 70;
+        this.isDead = false;
         this.enabled = false;
     }
     draw() {
@@ -382,8 +383,10 @@ class TRex {
                     if (typeof (collisionArray[y][x + this.imgWidth + 5]) !== "undefined") {
                         collisionArray[y][x + this.imgWidth + 5].trex = 0;
                     }
-                    if (typeof (collisionArray[y + 10][x + 5]) !== "undefined") {
-                        collisionArray[y + 10][x + 5].trex = 0;
+                    if (typeof (collisionArray[y + 10]) !== "undefined") {
+                        if (typeof (collisionArray[y + 10][x + 5]) !== "undefined") {
+                            collisionArray[y + 10][x + 5].trex = 0;
+                        }
                     }
                     if (typeof (collisionArray[y - this.imgHeight][x + 10]) !== "undefined") {
                         collisionArray[y - this.imgHeight][x + 10].trex = 0;
@@ -413,26 +416,79 @@ class TRex {
         })
     }
     enable() {
-        this.enabled = true;
+        if (!this.isDead) {
+            this.enabled = true;
+        }
     }
     disable() {
         this.enabled = false;
         this.pos = [160, width];
+        this.isDead = false;
+    }
+    dead() {
+        if(!this.isDead) {
+            score += 1;
+        }
+        this.isDead = true;
+        debugMessage = score;
+
+        for (let y = this.pos[0]; y < height; y++) {
+            for (let x = this.pos[1]; x < width; x++) {
+
+                if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
+
+                    if (typeof (collisionArray[y][x]) !== "undefined") {
+                        collisionArray[y][x].trex = 0;
+                    }
+                    if (typeof (collisionArray[y][x + this.imgWidth + 2]) !== "undefined") {
+                        collisionArray[y][x + this.imgWidth + 2].trex = 0;
+                    }
+                    if (typeof (collisionArray[y + 2]) !== "undefined") {
+                        collisionArray[y + 2][x + 2].trex = 0;
+                    }
+                    if (typeof (collisionArray[y - this.imgHeight][x + 2]) !== "undefined") {
+                        collisionArray[y - this.imgHeight][x + 2].trex = 0;
+                    }
+                }
+            }
+        }
+
+    }
+    deadAnimation() {
+        if (this.pos[0] <= height) {
+            this.pos[1] -= 3;
+            this.pos[0] += 2;
+        }
+        else {
+            this.disable();
+        }
     }
     move() {
 
         if (this.enabled === true) {
-            this.pos[1] -= 5;
-            this.localCollision();
-            this.jumpControl();
-            this.gravity();
 
-            if (typeof (collisionArray[this.pos[0]][this.pos[1] - 10]) !== "undefined") {
-                if (collisionArray[this.pos[0]][this.pos[1] - 10].cactus === 1) {
-                    this.jump();
+            if (this.isDead) {
+                this.deadAnimation();
+            }
+            else {
+                this.pos[1] -= 5;
+                this.localCollision();
+                this.gravity();
+                this.jumpControl();
+                if (typeof (collisionArray[this.pos[0]][this.pos[1] - 10]) !== "undefined") {
+                    if (collisionArray[this.pos[0]][this.pos[1] - 10].cactus === 1) {
+                        this.jump();
+                    }
                 }
             }
 
+            if (typeof (collisionArray[this.pos[0]]) !== "undefined") {
+                if (typeof (collisionArray[this.pos[0]][this.pos[1]]) !== "undefined") {
+                    if (collisionArray[this.pos[0]][this.pos[1]].player === 1) {
+                        this.dead();
+                    }
+                }
+            }
 
             this.draw();
         }
@@ -618,7 +674,6 @@ class Pterodactyl {
         if (collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
             this.trexCollision = true;
             score += 1;
-            debugMessage = score;
         }
         else {
             this.trexCollision = false;
