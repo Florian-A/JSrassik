@@ -42,7 +42,7 @@ class Collision {
         for (let y = 0; y < height; y++) {
             collisionArray[y] = [];
             for (let x = 0; x < width; x++) {
-                collisionArray[y][x] = { y: y, x: x, ground: 0, cactus: 0, leaf: 0, trex: 0 };
+                collisionArray[y][x] = { y: y, x: x, player: 0, ground: 0, cactus: 0, leaf: 0, trex: 0 };
             }
         }
         clearedCollisionArray = collisionArray;
@@ -299,7 +299,6 @@ class TRex {
         this.jumpInProgress = false;
         this.roofOfJump = 70;
         this.enabled = false;
-        //this.setHotKey();
     }
     draw() {
         if (this.imgSteep <= 6) {
@@ -372,28 +371,26 @@ class TRex {
             this.collisionX = false;
         }
 
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
+        for (let y = this.pos[0]; y < height; y++) {
+            for (let x = this.pos[1]; x < width; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
-                    collisionArray[y][x].trex = 1;
 
+                    if (typeof (collisionArray[y][x]) !== "undefined") {
+                        collisionArray[y][x].trex = 1;
+                    }
                     if (typeof (collisionArray[y][x + this.imgWidth + 5]) !== "undefined") {
                         collisionArray[y][x + this.imgWidth + 5].trex = 0;
                     }
-
                     if (typeof (collisionArray[y + 10][x + 5]) !== "undefined") {
                         collisionArray[y + 10][x + 5].trex = 0;
                     }
-
                     if (typeof (collisionArray[y - this.imgHeight][x + 10]) !== "undefined") {
                         collisionArray[y - this.imgHeight][x + 10].trex = 0;
                     }
                 }
             }
         }
-
-
 
     }
     jump() {
@@ -540,6 +537,26 @@ class Pterodactyl {
         else {
             this.collisionX = false;
         }
+
+        for (let y = this.pos[0]; y < this.posCollision[0]; y++) {
+            for (let x = this.pos[1]; x < this.posCollision[1]; x++) {
+
+                if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
+
+                    if (typeof (collisionArray[y][x]) !== "undefined") {
+                        collisionArray[y][x].player = 1;
+                    }
+                    if (typeof (collisionArray[y + 14][x]) !== "undefined") {
+                        collisionArray[y + 14][x].player = 0;
+                    }
+                    if (typeof (collisionArray[y - this.imgHeight][x]) !== "undefined") {
+                        collisionArray[y - this.imgHeight][x].player = 0;
+                    }
+                }
+            }
+        }
+
+
     }
     showCollision() {
         if (debugLevel >= 2) {
@@ -591,16 +608,16 @@ class Pterodactyl {
     }
     move() {
 
-        if(this.collisionY){
-            gameOver=true;
+        if (this.collisionY) {
+            gameOver = true;
         }
-        else if(this.collisionX){
-            gameOver=true;
+        else if (this.collisionX) {
+            gameOver = true;
         }
 
         if (collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
             this.trexCollision = true;
-            score+=1;
+            score += 1;
             debugMessage = score;
         }
         else {
@@ -610,7 +627,6 @@ class Pterodactyl {
         this.gravity();
         this.localCollision();
         this.draw();
-        this.showCollision();
     }
 }
 
@@ -662,6 +678,20 @@ class Debug {
                 for (let x = 0; x < width; x++) {
                     if (collisionArray[y][x].trex === 1) {
                         context.fillStyle = "rgba(255,0,0,0.5)";
+                        context.fillRect(x, y, 1, 1);
+                    }
+                }
+            }
+            context.stroke();
+        }
+    }
+    // Affichage de la collision avec le joueur.
+    displayPlayerCollision() {
+        if (debugLevel >= 2) {
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (collisionArray[y][x].player === 1) {
+                        context.fillStyle = "rgba(0,0,255,0.5)";
                         context.fillRect(x, y, 1, 1);
                     }
                 }
@@ -755,6 +785,7 @@ class Debug {
         this.displayDebugMenu();
         this.displayCatusCollision();
         this.displayTrexCollision();
+        this.displayPlayerCollision();
         this.displayGroundCollision();
         this.displayGrid();
     }
@@ -868,14 +899,14 @@ class Core {
         document.addEventListener('keydown', (event) => {
             if (event.which === 36) {
                 this.startInterval();
-                gameOver=false;
+                gameOver = false;
             }
             if (event.which === 35) {
                 this.breakInterval();
             }
             if (event.which === 45) {
                 this.nextInterval();
-                gameOver=false;
+                gameOver = false;
             }
         })
     }
@@ -885,8 +916,7 @@ class Core {
         collision.clearCollision();
         renderedFrame++;
 
-        if(gameOver)
-        {
+        if (gameOver) {
             this.breakInterval();
         }
 
