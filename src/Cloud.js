@@ -41,7 +41,12 @@ export default class Cloud {
     }
     move() {
         if (this.enabled === true) {
-            this.pos[1] -= 2;
+            if(!gameOver['buffer']) {
+                this.pos[1] -= 2;
+            }
+            else {
+                this.pos[1] -= 0.1;
+            }
             this.draw();
         }
         if (this.pos[1] < 0 - this.imgWidth) {
