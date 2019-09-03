@@ -4,9 +4,9 @@ Google Chrome Dino Easter Egg  ![](./mockup/dino.png) + Flappy dino ![](./mockup
 
 ## 📐 Maquettes fonctionnelles
 
-![](./mockup/mobile1.png)
-![](./mockup/mobile2.png)
-![](./mockup/desktop1.png)
+![](./conception/mockup/mobile1.png)
+![](./conception/mockup/mobile2.png)
+![](./conception/mockup/desktop1.png)
 
 ## 🕹️ Commandes en jeu :
 
