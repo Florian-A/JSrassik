@@ -17,9 +17,9 @@
 //                                             ZZZZZZZZZZZZ                   
 //                                                                                                          
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
-import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
+import { context, height, width, fps, gravity } from './sharingConstants.js';
+import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
+import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
 export default class Pterodactyl {
     constructor() {
         // pos[0] ordonnée y.
@@ -56,7 +56,10 @@ export default class Pterodactyl {
             this.imgPosX = 46;
             this.imgSteep = 0;
         }
-        this.imgSteep++;
+        if(!gameOver['buffer'])
+        {
+            this.imgSteep++;
+        }
         drawImageRot(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.rotateDeg)
     }
     gravity() {
@@ -65,57 +68,72 @@ export default class Pterodactyl {
         }
     }
     localCollision() {
-        this.posCollision = [this.pos[0] + this.imgHeight - 13, this.pos[1] + this.imgWidth - 3];
+        
+            this.posCollision = [this.pos[0] + this.imgHeight - 13, this.pos[1] + this.imgWidth - 3];
 
-        let collisionY;
-        for (let index = 0; index <= this.imgWidth; index++) {
+            let collisionY;
+            for (let index = 0; index <= this.imgWidth; index++) {
 
-            if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
-                collisionY = true;
-            }
-        }
-        if (collisionY == true) {
-            this.collisionY = true;
-        }
-        else {
-            this.collisionY = false;
-        }
-        if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
-            this.collisionY = true;
-        }
+                if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
 
-        let collisionX;
-        for (let index = 0; index <= this.imgHeight; index++) {
-
-            if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
-                collisionX = true;
-            }
-        }
-        if (collisionX == true) {
-            this.collisionX = true;
-        }
-        else {
-            this.collisionX = false;
-        }
-
-        for (let y = this.pos[0]; y < this.posCollision[0]; y++) {
-            for (let x = this.pos[1]; x < this.posCollision[1]; x++) {
-
-                if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
-
-                    if (typeof (collisionArray[y][x]) !== "undefined") {
-                        collisionArray[y][x].player = 1;
-                    }
-                    if (typeof (collisionArray[y + 14][x]) !== "undefined") {
-                        collisionArray[y + 14][x].player = 0;
-                    }
-                    if (typeof (collisionArray[y - this.imgHeight][x]) !== "undefined") {
-                        collisionArray[y - this.imgHeight][x].player = 0;
+                    if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                        collisionY = true;
                     }
                 }
             }
-        }
+            if (collisionY == true) {
+                this.collisionY = true;
+            }
+            else {
+                this.collisionY = false;
+            }
+            if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
+                if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
+                    this.collisionY = true;
+                }
+            }
 
+            let collisionX;
+            for (let index = 0; index <= this.imgHeight; index++) {
+
+                if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
+                    if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                        collisionX = true;
+                    }
+                }
+            }
+            if (collisionX == true) {
+                this.collisionX = true;
+            }
+            else {
+                this.collisionX = false;
+            }
+
+            for (let y = this.pos[0]; y < this.posCollision[0]; y++) {
+                for (let x = this.pos[1]; x < this.posCollision[1]; x++) {
+
+                    if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
+                        if (!gameOver['buffer']) {
+                            if (typeof (collisionArray[y]) !== "undefined") {
+                                if (typeof (collisionArray[y][x]) !== "undefined") {
+                                    collisionArray[y][x].player = 1;
+                                }
+                            }
+                        }
+                        if (typeof (collisionArray[y + 14]) !== "undefined") {
+                            if (typeof (collisionArray[y + 14][x]) !== "undefined") {
+                                collisionArray[y + 14][x].player = 0;
+                            }
+                        }
+                        if (typeof (collisionArray[y]) !== "undefined") {
+                            if (typeof (collisionArray[y - this.imgHeight][x]) !== "undefined") {
+                                collisionArray[y - this.imgHeight][x].player = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        
 
     }
     showCollision() {
@@ -128,10 +146,12 @@ export default class Pterodactyl {
         }
     }
     jump() {
-        this.rotateDeg = 0;
-        this.collisionY = false;
-        this.jumpInProgress = true;
-        this.inFalling = false;
+        if (!gameOver['buffer']) {
+            this.rotateDeg = 0;
+            this.collisionY = false;
+            this.jumpInProgress = true;
+            this.inFalling = false;
+        }
     }
     jumpControl() {
         if (this.jumpInProgress === true && this.pos[0] >= this.roofOfJump) {
@@ -166,20 +186,25 @@ export default class Pterodactyl {
             this.jump();
         }
     }
+    deadAnimation() {
+        if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 0) {
+            this.pos[0] += gravity;
+        }
+    }
     move() {
 
-        if (this.collisionY) {
+        if (this.collisionY || this.collisionX) {
             gameOver['buffer'] = true;
-        }
-        else if (this.collisionX) {
-            gameOver['buffer'] = true;
+            this.deadAnimation();
         }
 
-        if (collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
-            this.trexCollision = true;
-        }
-        else {
-            this.trexCollision = false;
+        if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
+            if (collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
+                this.trexCollision = true;
+            }
+            else {
+                this.trexCollision = false;
+            }
         }
         this.jumpControl();
         this.gravity();
