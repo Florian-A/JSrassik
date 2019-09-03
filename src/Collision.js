@@ -24,15 +24,13 @@ export default class Collision {
     initCollision() {
         for (let y = 0; y < height; y++) {
             collisionArray[y] = [];
-            for (let x = 0; x < width; x++) {
+            for (let x = 0; x < width+100; x++) {
                 collisionArray[y][x] = { y: y, x: x, player: 0, ground: 0, cactus: 0, leaf: 0, trex: 0 };
             }
         }
-        clearedCollisionArray['buffer'] = collisionArray['buffer'];
     }
 
     clearCollision() {
-        collisionArray['buffer'] = clearedCollisionArray['buffer'];
 
     }
 }
