@@ -4,8 +4,7 @@
   "description": "Petit jeu JS dont le but est d'attraper des Tyrannosaurus Rex.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --watch"
+    "build": "cp -R ./public/* ./dist/; webpack --watch"
   },
   "repository": {
     "type": "git",
