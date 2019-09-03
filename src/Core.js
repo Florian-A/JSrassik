@@ -92,9 +92,9 @@ export default class Core {
         collision.clearCollision();
         renderedFrame['buffer']++;
 
-        if (gameOver['buffer']) {
-            this.breakInterval();
-        }
+        //if (gameOver['buffer']) {
+        //   this.breakInterval();
+        //}
 
         // Dessin du fond d'ecran.
         context.drawImage(background, 0, 0, 600, 250);
