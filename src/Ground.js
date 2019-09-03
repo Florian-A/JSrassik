@@ -42,7 +42,10 @@ export default class Ground {
     }
     move() {
         this.setGroundCollision();
-        this.pos[1] -= 3;
+        if(!gameOver['buffer'])
+        {
+            this.pos[1] -= 3;
+        }
         if (this.pos[1] <= -1200) {
             this.pos[1] = 0;
         }
