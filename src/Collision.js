@@ -14,6 +14,8 @@ import {context,height,width,fps,gravity} from './sharingConstants.js';
 import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
 import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
 
+
+
 export default class Collision {
     constructor() {
         this.initCollision();
@@ -26,11 +28,11 @@ export default class Collision {
                 collisionArray[y][x] = { y: y, x: x, player: 0, ground: 0, cactus: 0, leaf: 0, trex: 0 };
             }
         }
-        clearedCollisionArray = collisionArray;
+        clearedCollisionArray['buffer'] = collisionArray['buffer'];
     }
 
     clearCollision() {
-        collisionArray = clearedCollisionArray;
+        collisionArray['buffer'] = clearedCollisionArray['buffer'];
 
     }
 }

@@ -1,8 +1,8 @@
-export let debugLevel = 1;
-export let debugMessage;
-export let intervalStarted = false;
-export let renderedFrame = 0;
-export let gameOver = false;
-export let score = 0;
-export let collisionArray = [];
-export let clearedCollisionArray = [];
+export let debugLevel = {buffer: 1};
+export let debugMessage = {buffer: ''};
+export let intervalStarted = {buffer: false};
+export let renderedFrame = {buffer: 0};
+export let gameOver = {buffer: false};
+export let score = {buffer: 0};
+export let collisionArray = {buffer: []};
+export let clearedCollisionArray = {buffer: []};

@@ -30,6 +30,9 @@
 //                                             MMMM      MMMM                
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import {context,height,width,fps,gravity} from './sharingConstants.js';
+import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
+import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
 export default class Trex {
     constructor() {
         // pos[0] ordonnée y.
@@ -176,10 +179,10 @@ export default class Trex {
     }
     dead() {
         if (!this.isDead) {
-            score += 1;
+            score['buffer'] += 1;
         }
         this.isDead = true;
-        debugMessage = score;
+        debugMessage['buffer'] = score['buffer'];
 
         for (let y = this.pos[0]; y < height; y++) {
             for (let x = this.pos[1]; x < width; x++) {

@@ -30,7 +30,7 @@ export default class Debug {
     }
     // Affichage de la collision avec les cactus.
     displayCatusCollision() {
-        if (debugLevel >= 2) {
+        if (debugLevel['buffer'] >= 2) {
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     if (collisionArray[y][x].cactus === 1) {
@@ -44,7 +44,7 @@ export default class Debug {
     }
     // Affichage de la collision avec les T-Rex.
     displayTrexCollision() {
-        if (debugLevel >= 2) {
+        if (debugLevel['buffer'] >= 2) {
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     if (collisionArray[y][x].trex === 1) {
@@ -58,7 +58,7 @@ export default class Debug {
     }
     // Affichage de la collision avec le joueur.
     displayPlayerCollision() {
-        if (debugLevel >= 2) {
+        if (debugLevel['buffer'] >= 2) {
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     if (collisionArray[y][x].player === 1) {
@@ -77,7 +77,7 @@ export default class Debug {
         let groundYEnd = height;
         let groundXStart = 0;
         let groundXEnd = width;
-        if (debugLevel >= 2) {
+        if (debugLevel['buffer'] >= 2) {
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     if (collisionArray[y][0].ground === 1 && collisionArray[y - 1][0].ground === 0) {
@@ -97,7 +97,7 @@ export default class Debug {
         let gridYEnd = height;
         let gridXStart = 0;
         let gridXEnd = width;
-        if (debugLevel >= 2) {
+        if (debugLevel['buffer'] >= 2) {
 
             for (let y = 0; y < height; y++) {
                 context.fillStyle = "rgba(255,0,0,1)";
@@ -118,12 +118,12 @@ export default class Debug {
         }
     }
     displayDebugMenu() {
-        if (debugLevel >= 1) {
+        if (debugLevel['buffer'] >= 1) {
             context.font = this.textFont;
             context.fillStyle = "rgba(0,0,0,1)";
             context.fillText(this.fps, this.pos[1], this.pos[0]);
-            if (debugMessage !== undefined) {
-                context.fillText(debugMessage, this.pos[1], this.pos[0] + 20);
+            if (debugMessage['buffer'] !== undefined) {
+                context.fillText(debugMessage['buffer'], this.pos[1], this.pos[0] + 20);
             }
         }
     }
@@ -141,13 +141,13 @@ export default class Debug {
     setHotKey() {
         document.addEventListener("keydown", function (event) {
             if (event.which === 49) {
-                debugLevel = 1;
+                debugLevel['buffer'] = 1;
             }
             if (event.which === 50) {
-                debugLevel = 2;
+                debugLevel['buffer'] = 2;
             }
             if (event.which === 48) {
-                debugLevel = 0;
+                debugLevel['buffer'] = 0;
             }
         })
     }

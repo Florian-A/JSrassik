@@ -10,13 +10,14 @@
 //                                  "Y8888P"   "Y88888P"  888   T88b 8888888888
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {context,height,width,fps,gravity} from './sharingConstants.js';
+import {canvas,context,height,width,fps,gravity} from './sharingConstants.js';
 import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
 import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
 
 import Debug from './Debug.js';
 import Cactus from './Cactus.js';
 import Cloud from './Cloud.js';
+import Ground from './Ground.js';
 import Collision from './Collision.js';
 import Trex from './Trex.js';
 import Pterodactyl from './Pterodactyl.js';
@@ -55,15 +56,15 @@ export default class Core {
         this.startInterval();
     }
     startInterval() {
-        if (!intervalStarted) {
+        if (!intervalStarted['buffer']) {
             this.interval = setInterval(this.intervalLoop, 1000 / fps);
-            intervalStarted = true;
+            intervalStarted['buffer'] = true;
         }
 
     }
     breakInterval() {
         clearInterval(this.interval);
-        intervalStarted = false;
+        intervalStarted['buffer'] = false;
     }
 
     nextInterval() {
@@ -74,14 +75,14 @@ export default class Core {
         document.addEventListener('keydown', (event) => {
             if (event.which === 36) {
                 this.startInterval();
-                gameOver = false;
+                gameOver['buffer'] = false;
             }
             if (event.which === 35) {
                 this.breakInterval();
             }
             if (event.which === 45) {
                 this.nextInterval();
-                gameOver = false;
+                gameOver['buffer'] = false;
             }
         })
     }
@@ -89,9 +90,9 @@ export default class Core {
     intervalLoop() {
         debug.startPerfMeasurement();
         collision.clearCollision();
-        renderedFrame++;
+        renderedFrame['buffer']++;
 
-        if (gameOver) {
+        if (gameOver['buffer']) {
             this.breakInterval();
         }
 
@@ -100,16 +101,16 @@ export default class Core {
 
         ground.move();
 
-        if (renderedFrame % 24 === 23) {
+        if (renderedFrame['buffer'] % 24 === 23) {
             cloud[1].enable();
         }
-        if (renderedFrame % 60 === 59) {
+        if (renderedFrame['buffer'] % 60 === 59) {
             cloud[2].enable();
         }
-        if (renderedFrame % 90 === 89) {
+        if (renderedFrame['buffer'] % 90 === 89) {
             cloud[3].enable();
         }
-        if (renderedFrame % 130 === 129) {
+        if (renderedFrame['buffer'] % 130 === 129) {
             cloud[4].enable();
         }
         cloud[0].move();
@@ -117,13 +118,13 @@ export default class Core {
         cloud[2].move();
         cloud[4].move();
 
-        if (renderedFrame % 50 === 49) {
+        if (renderedFrame['buffer'] % 50 === 49) {
             cactus[0].enable();
         }
-        if (renderedFrame % 100 === 99) {
+        if (renderedFrame['buffer'] % 100 === 99) {
             cactus[1].enable();
         }
-        if (renderedFrame % 300 === 299) {
+        if (renderedFrame['buffer'] % 300 === 299) {
             cactus[2].enable();
         }
         cactus[0].move();
@@ -132,13 +133,13 @@ export default class Core {
         cactus[3].move();
 
 
-        if (renderedFrame % 50 === 49) {
+        if (renderedFrame['buffer'] % 50 === 49) {
             trex[0].enable();
         }
-        if (renderedFrame % 100 === 99) {
+        if (renderedFrame['buffer'] % 100 === 99) {
             trex[1].enable();
         }
-        if (renderedFrame % 300 === 299) {
+        if (renderedFrame['buffer'] % 300 === 299) {
             trex[2].enable();
         }
         trex[0].move();

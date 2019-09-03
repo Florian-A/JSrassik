@@ -169,15 +169,14 @@ export default class Pterodactyl {
     move() {
 
         if (this.collisionY) {
-            gameOver = true;
+            gameOver['buffer'] = true;
         }
         else if (this.collisionX) {
-            gameOver = true;
+            gameOver['buffer'] = true;
         }
 
         if (collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
             this.trexCollision = true;
-            score += 1;
         }
         else {
             this.trexCollision = false;
