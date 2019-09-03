@@ -92,7 +92,10 @@ export default class Cactus {
     }
     move() {
         if (this.enabled === true) {
-            this.pos[1] -= 3;
+            if(!gameOver['buffer'])
+            {
+                this.pos[1] -= 3;
+            }
             this.localCollision();
             this.draw();
         }
