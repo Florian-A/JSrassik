@@ -10,9 +10,9 @@
 //                                  "Y8888P"   "Y88888P"  888   T88b 8888888888
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {canvas,context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
-import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
+import { canvas, context, height, width, fps, gravity } from './sharingConstants.js';
+import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
+import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
 
 import Debug from './Debug.js';
 import Cactus from './Cactus.js';
@@ -21,10 +21,12 @@ import Ground from './Ground.js';
 import Collision from './Collision.js';
 import Trex from './Trex.js';
 import Pterodactyl from './Pterodactyl.js';
+import GameOver from './GameOver.js';
 
 let collision = new Collision();
 let ground = new Ground();
 let player = new Pterodactyl();
+let gameOverO = new GameOver();
 let debug = new Debug();
 let trex = [];
 trex[0] = new Trex();
@@ -86,15 +88,10 @@ export default class Core {
             }
         })
     }
-
     intervalLoop() {
         debug.startPerfMeasurement();
         collision.clearCollision();
         renderedFrame['buffer']++;
-
-        //if (gameOver['buffer']) {
-        //   this.breakInterval();
-        //}
 
         // Dessin du fond d'ecran.
         context.drawImage(background, 0, 0, 600, 250);
@@ -132,22 +129,23 @@ export default class Core {
         cactus[2].move();
         cactus[3].move();
 
-
-        if (renderedFrame['buffer'] % 50 === 49) {
-            trex[0].enable();
-        }
-        if (renderedFrame['buffer'] % 100 === 99) {
-            trex[1].enable();
-        }
-        if (renderedFrame['buffer'] % 300 === 299) {
-            trex[2].enable();
+        if (!gameOver['buffer']) {
+            if (renderedFrame['buffer'] % 50 === 49) {
+                trex[0].enable();
+            }
+            if (renderedFrame['buffer'] % 100 === 99) {
+                trex[1].enable();
+            }
+            if (renderedFrame['buffer'] % 300 === 299) {
+                trex[2].enable();
+            }
         }
         trex[0].move();
         trex[1].move();
         trex[2].move();
         trex[3].move();
-
         player.move();
+        gameOverO.check();
         debug.draw();
     }
 }

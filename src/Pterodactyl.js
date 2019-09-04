@@ -18,7 +18,7 @@
 //                                                                                                          
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
+import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray, restartRequested} from './sharingVariables.js';
 import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
 export default class Pterodactyl {
     constructor() {
@@ -181,6 +181,15 @@ export default class Pterodactyl {
             }
         })
     }
+    restart()
+    {
+        this.pos = [70, 100];
+        this.collisionY = false;
+        this.collisionX = false;
+        restartRequested['buffer'] = false;
+        console.log('tpero :' + restartRequested['buffer']);
+        
+    }
     autoPlay() {
         if (collisionArray[this.posCollision[0] + 15][this.posCollision[1]].ground === 1 || collisionArray[this.posCollision[0] + 15][this.posCollision[1]].cactus === 1) {
             this.jump();
@@ -192,6 +201,9 @@ export default class Pterodactyl {
         }
     }
     move() {
+        if(restartRequested['buffer']) {
+            this.restart();
+        }
 
         if (this.collisionY || this.collisionX) {
             gameOver['buffer'] = true;

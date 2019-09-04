@@ -6,3 +6,4 @@ export let gameOver = {buffer: false};
 export let score = {buffer: 0};
 export let collisionArray = {buffer: []};
 export let clearedCollisionArray = {buffer: []};
+export let restartRequested = {buffer: false};
