@@ -18,6 +18,29 @@
 //                                                                                                                      
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+console.log((window.innerHeight*0.003921569).toFixed(2));
+console.log((window.innerWidth*0.001666667).toFixed(2));
+
+function setCanvasSize()
+{
+    let scale = 0;
+    if( window.innerHeight*0.003921569 >= window.innerWidth*0.001666667)
+    {
+        scale=window.innerWidth*0.001666667;
+    }
+    else {
+        scale=window.innerHeight*0.003921569;
+    }
+    let middleWidth = window.innerHeight / 2;
+    
+    let gameCanvas = document.querySelector('.game-canvas');
+    gameCanvas.style.transform = `scale(${scale}) translateY(-50%)`;
+}
+
+setCanvasSize();
+window.addEventListener("resize", setCanvasSize);
+
+//console.log(gameCanvas.style);
 // Importation des classes.
 import Core from './Core.js';
 let core = new Core();

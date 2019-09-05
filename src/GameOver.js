@@ -14,18 +14,17 @@ export default class GameOver {
             this.setHotKey();
         }
     }
-    
+
     restart(event) {
-        if (event.which === 32 && gameOver['buffer']) {
+        if (gameOver['buffer']) {
             restartRequested['buffer'] = true;
             gameOver['buffer'] = false;
         }
-        
     }
-
 
     setHotKey() {
         document.addEventListener("keydown", this.restart);
+        document.addEventListener("touchstart",this.restart);
     }
 
     draw() {

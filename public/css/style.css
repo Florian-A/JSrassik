@@ -1,12 +1,15 @@
 html {
     font-family: monospace;
 }
+body {
+    margin:0px;
+}
 .game-canvas {
     width: 600px;
-    transform: scale(2) translateY(0px);
     height: 250px;
     margin: auto;
     transform-origin: top center;
+    margin-top: 50vh;
 }
 
 .game-canvas canvas {
