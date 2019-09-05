@@ -34,7 +34,7 @@ function setCanvasSize()
     let middleWidth = window.innerHeight / 2;
     
     let gameCanvas = document.querySelector('.game-canvas');
-    gameCanvas.style.transform = `scale(${scale}) translateY(-50%)`;
+    gameCanvas.style.transform = `scale(${scale})`;
 }
 
 setCanvasSize();

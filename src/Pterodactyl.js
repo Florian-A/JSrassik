@@ -193,7 +193,6 @@ export default class Pterodactyl {
         }
     }
     move() {
-        debugMessage['buffer'] = this.collisionY + ',' + this.collisionX;
         if (restartRequested['buffer']) {
             this.restart();
         }
