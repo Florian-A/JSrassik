@@ -1,5 +1,5 @@
 // Selection du canvas et definition de sa taille.
-export const canvas = document.querySelector("#game-display");
+export const canvas = document.querySelector(".game > div > canvas");
 export const context = canvas.getContext("2d");
 
 export const height = 250;

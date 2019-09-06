@@ -3,15 +3,22 @@ html {
 }
 body {
     margin:0px;
-}
-.game-canvas {
-    width: 600px;
-    height: 250px;
-    margin: auto;
-    transform-origin: top center;
-    margin-top: 50vh;
+    background-color: #f7f7f7;
 }
 
-.game-canvas canvas {
+.game {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.game > div {
+    width: 600px;
+    height: 250px;
+    transition: transform 250ms cubic-bezier(0.4, 0.0, 1, 1) .4s;
+}
+
+.game > div > canvas {
     image-rendering: pixelated;
 }

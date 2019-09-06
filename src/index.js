@@ -33,7 +33,7 @@ function setCanvasSize()
     }
     let middleWidth = window.innerHeight / 2;
     
-    let gameCanvas = document.querySelector('.game-canvas');
+    let gameCanvas = document.querySelector('.game > div');
     gameCanvas.style.transform = `scale(${scale})`;
 }
 
