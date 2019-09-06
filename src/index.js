@@ -18,8 +18,7 @@
 //                                                                                                                      
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-console.log((window.innerHeight*0.003921569).toFixed(2));
-console.log((window.innerWidth*0.001666667).toFixed(2));
+import Core from './Core.js';
 
 function setCanvasSize()
 {
@@ -40,7 +39,11 @@ function setCanvasSize()
 setCanvasSize();
 window.addEventListener("resize", setCanvasSize);
 
+let local = localStorage;
+console.log(local);
+//localStorage.setItem('alpha', 1)
+
 //console.log(gameCanvas.style);
 // Importation des classes.
-import Core from './Core.js';
+
 let core = new Core();

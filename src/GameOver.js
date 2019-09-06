@@ -1,5 +1,5 @@
 import { context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray, restartRequested } from './sharingVariables.js';
+import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOverd, score, collisionArray, clearedCollisionArray, restartRequested } from './sharingVariables.js';
 import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
 export default class GameOver {
     constructor() {
@@ -9,16 +9,16 @@ export default class GameOver {
         this.gameOverLayout.src = "./layout/gameover.png";
     }
     check() {
-        if (gameOver['buffer']) {
+        if (gameOverd['buffer']) {
             this.draw();
             this.setHotKey();
         }
     }
 
     restart(event) {
-        if (gameOver['buffer']) {
+        if (gameOverd['buffer']) {
             restartRequested['buffer'] = true;
-            gameOver['buffer'] = false;
+            gameOverd['buffer'] = false;
         }
     }
 

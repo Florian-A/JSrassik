@@ -31,7 +31,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
+import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOverd, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
 import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
 export default class Trex {
     constructor() {
@@ -232,7 +232,7 @@ export default class Trex {
             }
             else {
 
-                if (!gameOver['buffer']) {
+                if (!gameOverd['buffer']) {
                     this.pos[1] -= 5;
                 }
                 else {

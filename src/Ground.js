@@ -12,7 +12,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
+import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOverd,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
 import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
 export default class Ground {
     constructor() {
@@ -42,7 +42,7 @@ export default class Ground {
     }
     move() {
         this.setGroundCollision();
-        if(!gameOver['buffer'])
+        if(!gameOverd['buffer'])
         {
             this.pos[1] -= 3;
         }

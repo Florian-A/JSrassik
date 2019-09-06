@@ -18,10 +18,13 @@
 //                                                                                                          
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray, restartRequested } from './sharingVariables.js';
+import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOverd, score, collisionArray, clearedCollisionArray, restartRequested } from './sharingVariables.js';
 import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
+
+
 export default class Pterodactyl {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent;
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
         this.pos = [70, 100];
@@ -56,14 +59,14 @@ export default class Pterodactyl {
             this.imgPosX = 46;
             this.imgSteep = 0;
         }
-        if (!gameOver['buffer']) {
+        if (!gameOverd['buffer']) {
             this.imgSteep++;
         }
         drawImageRot(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.rotateDeg)
     }
     gravity() {
         if (this.collisionY === false) {
-            this.pos[0] += gravity;
+            this.pos[0] += this.parent.GRAVITY;
         }
     }
     localCollision() {
@@ -103,7 +106,7 @@ export default class Pterodactyl {
             for (let x = this.pos[1]; x < this.posCollision[1]; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
-                    if (!gameOver['buffer']) {
+                    if (!gameOverd['buffer']) {
                         if (typeof (collisionArray[y]) !== "undefined") {
                             if (typeof (collisionArray[y][x]) !== "undefined") {
                                 collisionArray[y][x].player = 1;
@@ -136,7 +139,7 @@ export default class Pterodactyl {
         }
     }
     jump() {
-        if (!gameOver['buffer']) {
+        if (!gameOverd['buffer']) {
             this.rotateDeg = 0;
             this.collisionY = false;
             this.jumpInProgress = true;
@@ -189,7 +192,7 @@ export default class Pterodactyl {
     }
     deadAnimation() {
         if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 0) {
-            this.pos[0] += gravity;
+            this.pos[0] += this.parent.GRAVITY;
         }
     }
     move() {
@@ -201,7 +204,7 @@ export default class Pterodactyl {
             if (this.collisionX) {
                 this.jump();
             }
-            gameOver['buffer'] = true;
+            gameOverd['buffer'] = true;
             this.deadAnimation();
         }
 

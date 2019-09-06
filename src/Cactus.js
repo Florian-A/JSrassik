@@ -50,7 +50,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////                 
 import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
+import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOverd,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
 import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
 export default class Cactus {
     constructor() {
@@ -92,7 +92,7 @@ export default class Cactus {
     }
     move() {
         if (this.enabled === true) {
-            if(!gameOver['buffer'])
+            if(!gameOverd['buffer'])
             {
                 this.pos[1] -= 3;
             }

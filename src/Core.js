@@ -11,7 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { canvas, context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOver, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
+import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOverd, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
 import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
 
 import Debug from './Debug.js';
@@ -20,49 +20,70 @@ import Cloud from './Cloud.js';
 import Ground from './Ground.js';
 import Collision from './Collision.js';
 import Trex from './Trex.js';
-import Pterodactyl from './Pterodactyl.js';
+import Pterodactyl from './Pterodactyl';
 import GameOver from './GameOver.js';
-
-let collision = new Collision();
-let ground = new Ground();
-let player = new Pterodactyl();
-let gameOverO = new GameOver();
-let debug = new Debug();
-let trex = [];
-trex[0] = new Trex();
-trex[1] = new Trex();
-trex[2] = new Trex();
-trex[3] = new Trex();
-trex[4] = new Trex();
-let cloud = [];
-cloud[0] = new Cloud();
-cloud[1] = new Cloud();
-cloud[2] = new Cloud();
-cloud[3] = new Cloud();
-cloud[4] = new Cloud();
-let cactus = [];
-cactus[0] = new Cactus();
-cactus[1] = new Cactus();
-cactus[2] = new Cactus();
-cactus[3] = new Cactus();
-// Creation du ciel / fond d'ecran
-let background = new Image();
-background.src = "./layout/background.png";
 
 export default class Core {
     constructor() {
+
+        // Definition de la taille du canvas.
         canvas.width = width;
         canvas.height = height;
+
+        // Definition des constantes.
+        this.GRAVITY = 4;
+
         this.interval;
+
+        // Ajout de l'obtion Debug.
+        this.debug = new Debug();
+
+        // Ajout de l'objet Collision.
+        this.collision = new Collision();
+
+        // Creation du ciel.
+        this.background = new Image();
+        this.background.src = "./layout/background.png";
+
+        // Ajout de l'objet Ground.
+        this.ground = new Ground();
+
+        // Ajout des objets Cloud.
+        this.cloud = [];
+        this.cloud[0] = new Cloud();
+        this.cloud[1] = new Cloud();
+        this.cloud[2] = new Cloud();
+        this.cloud[3] = new Cloud();
+
+        // Ajout des objets Cactus.
+        this.cactus = [];
+        this.cactus[0] = new Cactus();
+        this.cactus[1] = new Cactus();
+        this.cactus[2] = new Cactus();
+        this.cactus[3] = new Cactus();
+
+        // Ajout des objets Trex.
+        this.trex = [];
+        this.trex[0] = new Trex();
+        this.trex[1] = new Trex();
+        this.trex[2] = new Trex();
+        this.trex[3] = new Trex();
+        this.trex[4] = new Trex();
+
+        // Ajout de l'objet player.
+        this.player = new Pterodactyl(this);
+
+        // Ajout de l'objet Gameover.
+        this.gameOver = new GameOver();
+
         this.setHotKey();
         this.startInterval();
     }
     startInterval() {
         if (!intervalStarted['buffer']) {
-            this.interval = setInterval(this.intervalLoop, 1000 / fps);
+            this.interval = setInterval(() => { this.intervalLoop() }, 1000 / fps);
             intervalStarted['buffer'] = true;
         }
-
     }
     breakInterval() {
         clearInterval(this.interval);
@@ -77,75 +98,89 @@ export default class Core {
         document.addEventListener('keydown', (event) => {
             if (event.which === 36) {
                 this.startInterval();
-                gameOver['buffer'] = false;
+                gameOverd['buffer'] = false;
             }
             if (event.which === 35) {
                 this.breakInterval();
             }
             if (event.which === 45) {
                 this.nextInterval();
-                gameOver['buffer'] = false;
+                gameOverd['buffer'] = false;
             }
         })
     }
     intervalLoop() {
-        debug.startPerfMeasurement();
-        collision.clearCollision();
+
+        // Debut du mesure du nombre d'images par secondes.
+        this.debug.startPerfMeasurement();
+
+        // Compteur du nombre de frames totales.
         renderedFrame['buffer']++;
 
+        this.collision.clearCollision();
+
         // Dessin du fond d'ecran.
-        context.drawImage(background, 0, 0, 600, 250);
+        context.drawImage(this.background, 0, 0, 600, 250);
 
-        ground.move();
+        // Animation du sol.
+        this.ground.move();
 
+        // Activation et animation des nuages.
         if (renderedFrame['buffer'] % 24 === 23) {
-            cloud[1].enable();
+            this.cloud[0].enable();
         }
         if (renderedFrame['buffer'] % 60 === 59) {
-            cloud[2].enable();
+            this.cloud[1].enable();
         }
         if (renderedFrame['buffer'] % 90 === 89) {
-            cloud[3].enable();
+            this.cloud[2].enable();
         }
         if (renderedFrame['buffer'] % 130 === 129) {
-            cloud[4].enable();
+            this.cloud[3].enable();
         }
-        cloud[0].move();
-        cloud[1].move();
-        cloud[2].move();
-        cloud[4].move();
+        this.cloud[0].move();
+        this.cloud[1].move();
+        this.cloud[2].move();
+        this.cloud[3].move();
 
+        // Activation et animation des cactus.
         if (renderedFrame['buffer'] % 50 === 49) {
-            cactus[0].enable();
+            this.cactus[0].enable();
         }
         if (renderedFrame['buffer'] % 100 === 99) {
-            cactus[1].enable();
+            this.cactus[1].enable();
         }
         if (renderedFrame['buffer'] % 300 === 299) {
-            cactus[2].enable();
+            this.cactus[2].enable();
         }
-        cactus[0].move();
-        cactus[1].move();
-        cactus[2].move();
-        cactus[3].move();
+        this.cactus[0].move();
+        this.cactus[1].move();
+        this.cactus[2].move();
 
-        if (!gameOver['buffer']) {
+        // Activation et animation des cactus.
+        if (!gameOverd['buffer']) {
             if (renderedFrame['buffer'] % 50 === 49) {
-                trex[0].enable();
+                this.trex[0].enable();
             }
             if (renderedFrame['buffer'] % 100 === 99) {
-                trex[1].enable();
+                this.trex[1].enable();
             }
             if (renderedFrame['buffer'] % 300 === 299) {
-                trex[2].enable();
+                this.trex[2].enable();
             }
         }
-        trex[0].move();
-        trex[1].move();
-        trex[2].move();
-        trex[3].move();
-        player.move();
-        gameOverO.check();
-        debug.draw();
+        this.trex[0].move();
+        this.trex[1].move();
+        this.trex[2].move();
+        this.trex[3].move();
+
+        // Animation et gestion du personnage principal
+        this.player.move();
+
+
+        this.gameOver.check();
+        
+        // Dessin du menu debogage.
+        this.debug.draw();
     }
 }
