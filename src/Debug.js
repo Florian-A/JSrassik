@@ -11,11 +11,10 @@
 //                            8888888P"  8888888888 8888888P"   "Y88888P"   "Y8888P88
 //       
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
-import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
+import { debugMessage } from './sharingVariables.js';
 export default class Debug {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent;
         this.textFont = "18px monospace";
         this.pos = [20, 20];
         this.lastTime = 0;
@@ -25,113 +24,113 @@ export default class Debug {
     // Mesure du nombre d'images par secondes.
     startPerfMeasurement() {
         let time = Date.now();
-        this.fps = 'FPS:' + ((fps / (time - this.lastTime)) * (1000 / fps)).toFixed(2);
+        this.fps = 'FPS:' + ((this.parent.FPS / (time - this.lastTime)) * (1000 / this.parent.FPS)).toFixed(2);
         this.lastTime = time;
     }
     // Affichage de la collision avec les cactus.
     displayCatusCollision() {
-        if (debugLevel['buffer'] >= 2) {
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                    if (collisionArray[y][x].cactus === 1) {
-                        context.fillStyle = "rgba(0,255,0,0.5)";
-                        context.fillRect(x, y, 1, 1);
+        if (this.parent.debugLevel >= 2) {
+            for (let y = 0; y < this.parent.HEIGHT; y++) {
+                for (let x = 0; x < this.parent.WIDTH; x++) {
+                    if (this.parent.collisionArray[y][x].cactus === 1) {
+                        this.parent.CONTEXT.fillStyle = "rgba(0,255,0,0.5)";
+                        this.parent.CONTEXT.fillRect(x, y, 1, 1);
                     }
                 }
             }
-            context.stroke();
+            this.parent.CONTEXT.stroke();
         }
     }
     // Affichage de la collision avec les T-Rex.
     displayTrexCollision() {
-        if (debugLevel['buffer'] >= 2) {
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                    if (collisionArray[y][x].trex === 1) {
-                        context.fillStyle = "rgba(255,0,0,0.5)";
-                        context.fillRect(x, y, 1, 1);
+        if (this.parent.debugLevel >= 2) {
+            for (let y = 0; y < this.parent.HEIGHT; y++) {
+                for (let x = 0; x < this.parent.WIDTH; x++) {
+                    if (this.parent.collisionArray[y][x].trex === 1) {
+                        this.parent.CONTEXT.fillStyle = "rgba(255,0,0,0.5)";
+                        this.parent.CONTEXT.fillRect(x, y, 1, 1);
                     }
                 }
             }
-            context.stroke();
+            this.parent.CONTEXT.stroke();
         }
     }
     // Affichage de la collision avec le joueur.
     displayPlayerCollision() {
-        if (debugLevel['buffer'] >= 2) {
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                    if (collisionArray[y][x].player === 1) {
-                        context.fillStyle = "rgba(0,0,255,0.5)";
-                        context.fillRect(x, y, 1, 1);
+        if (this.parent.debugLevel >= 2) {
+            for (let y = 0; y < this.parent.HEIGHT; y++) {
+                for (let x = 0; x < this.parent.WIDTH; x++) {
+                    if (this.parent.collisionArray[y][x].player === 1) {
+                        this.parent.CONTEXT.fillStyle = "rgba(0,0,255,0.5)";
+                        this.parent.CONTEXT.fillRect(x, y, 1, 1);
                     }
                 }
             }
-            context.stroke();
+            this.parent.CONTEXT.stroke();
         }
     }
     // Affichage de la collision avec le sol.
     displayGroundCollision() {
 
         let groundYStart = 0;
-        let groundYEnd = height;
+        let groundYEnd = this.parent.HEIGHT;
         let groundXStart = 0;
-        let groundXEnd = width;
-        if (debugLevel['buffer'] >= 2) {
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                    if (collisionArray[y][0].ground === 1 && collisionArray[y - 1][0].ground === 0) {
-                        groundYStart = collisionArray[y][0].y;
+        let groundXEnd = this.parent.WIDTH;
+        if (this.parent.debugLevel >= 2) {
+            for (let y = 0; y < this.parent.HEIGHT; y++) {
+                for (let x = 0; x < this.parent.WIDTH; x++) {
+                    if (this.parent.collisionArray[y][0].ground === 1 && this.parent.collisionArray[y - 1][0].ground === 0) {
+                        groundYStart = this.parent.collisionArray[y][0].y;
                     }
                 }
             }
-            context.fillStyle = "rgba(0,0,0,0.5)";
-            context.fillRect(groundXStart, groundYStart, groundXEnd - groundXStart, groundYEnd - groundYStart);
-            context.stroke();
+            this.parent.CONTEXT.fillStyle = "rgba(0,0,0,0.5)";
+            this.parent.CONTEXT.fillRect(groundXStart, groundYStart, groundXEnd - groundXStart, groundYEnd - groundYStart);
+            this.parent.CONTEXT.stroke();
         }
     }
     // Affichage de la grille de deboguage.
     displayGrid() {
 
         let gridYStart = 0;
-        let gridYEnd = height;
+        let gridYEnd = this.parent.HEIGHT;
         let gridXStart = 0;
-        let gridXEnd = width;
-        if (debugLevel['buffer'] >= 2) {
+        let gridXEnd = this.parent.WIDTH;
+        if (this.parent.debugLevel >= 2) {
 
-            for (let y = 0; y < height; y++) {
-                context.fillStyle = "rgba(255,0,0,1)";
+            for (let y = 0; y < this.parent.HEIGHT; y++) {
+                this.parent.CONTEXT.fillStyle = "rgba(255,0,0,1)";
                 if (y % 50 === 49) {
-                    context.fillRect(gridXStart, y, gridXEnd - gridXStart, 1 - gridYStart);
-                    context.fillText(y + 1, gridXEnd - 40, y);
+                    this.parent.CONTEXT.fillRect(gridXStart, y, gridXEnd - gridXStart, 1 - gridYStart);
+                    this.parent.CONTEXT.fillText(y + 1, gridXEnd - 40, y);
                 }
 
             }
-            for (let x = 0; x < width; x++) {
-                context.fillStyle = "rgba(255,0,0,1)";
+            for (let x = 0; x < this.parent.WIDTH; x++) {
+                this.parent.CONTEXT.fillStyle = "rgba(255,0,0,1)";
                 if (x % 50 === 49) {
-                    context.fillRect(x + 1, gridYStart, 1 - gridXStart, gridYEnd - gridYStart);
-                    context.fillText(x + 1, x, gridYEnd - 25);
+                    this.parent.CONTEXT.fillRect(x + 1, gridYStart, 1 - gridXStart, gridYEnd - gridYStart);
+                    this.parent.CONTEXT.fillText(x + 1, x, gridYEnd - 25);
                 }
             }
-            context.stroke();
+            this.parent.CONTEXT.stroke();
         }
     }
     displayDebugMenu() {
-        if (debugLevel['buffer'] >= 1) {
-            context.font = this.textFont;
-            context.fillStyle = "rgba(0,0,0,1)";
-            context.fillText(this.fps, this.pos[1], this.pos[0]);
-            if (debugMessage['buffer'] !== undefined) {
-                context.fillText(debugMessage['buffer'], this.pos[1], this.pos[0] + 20);
+        if (this.parent.debugLevel >= 1) {
+            this.parent.CONTEXT.font = this.textFont;
+            this.parent.CONTEXT.fillStyle = "rgba(0,0,0,1)";
+            this.parent.CONTEXT.fillText(this.fps, this.pos[1], this.pos[0]);
+            if (debugMessage['b'] !== undefined) {
+                this.parent.CONTEXT.fillText(debugMessage['b'], this.pos[1], this.pos[0] + 20);
             }
         }
     }
     dumpCollision() {
         let dump = ``;
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                dump += collisionArray[y][x].ground;
+        for (let y = 0; y < this.parent.HEIGHT; y++) {
+            for (let x = 0; x < this.parent.WIDTH; x++) {
+                dump += this.parent.collisionArray[y][x].ground;
             }
             dump += `
             `;
@@ -139,15 +138,15 @@ export default class Debug {
         console.log(dump);
     }
     setHotKey() {
-        document.addEventListener("keydown", function (event) {
+        document.addEventListener("keydown", (event) => {
             if (event.which === 49) {
-                debugLevel['buffer'] = 1;
+                this.parent.debugLevel = 1;
             }
             if (event.which === 50) {
-                debugLevel['buffer'] = 2;
+                this.parent.debugLevel = 2;
             }
             if (event.which === 48) {
-                debugLevel['buffer'] = 0;
+                this.parent.debugLevel = 0;
             }
         })
     }

@@ -1,34 +1,37 @@
-import { context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOverd, score, collisionArray, clearedCollisionArray, restartRequested } from './sharingVariables.js';
-import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
+import {isGameOver} from './sharingVariables.js';
+
 export default class GameOver {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent;
         this.gameOver = false;
         // Creation du message de fin du jeu.
         this.gameOverLayout = new Image();
         this.gameOverLayout.src = "./layout/gameover.png";
     }
     check() {
-        if (gameOverd['buffer']) {
+        if (isGameOver['b']) {
             this.draw();
             this.setHotKey();
         }
     }
 
     restart(event) {
-        if (gameOverd['buffer']) {
-            restartRequested['buffer'] = true;
-            gameOverd['buffer'] = false;
+        if (isGameOver['b']) {
+            this.parent.score = 0;
+            this.parent.restartRequested = true;
+            isGameOver['b'] = false;
         }
     }
 
     setHotKey() {
-        document.addEventListener("keydown", this.restart);
-        document.addEventListener("touchstart",this.restart);
+        document.addEventListener("keydown", () => this.restart(event));
+        document.addEventListener("touchstart", () => this.restart(event));
     }
 
     draw() {
-        context.drawImage(this.gameOverLayout, Math.round(width / 2 - this.gameOverLayout.width / 2), Math.round(height / 2 - this.gameOverLayout.height / 2), 253, 71);
+        this.parent.CONTEXT.fillStyle = "rgba(247,247,247,0.9)";
+        this.parent.CONTEXT.fillRect(0, 0, this.parent.WIDTH, this.parent.HEIGHT);
+        this.parent.CONTEXT.drawImage(this.gameOverLayout, Math.round(this.parent.WIDTH / 2 - this.gameOverLayout.width / 2), Math.round(this.parent.HEIGHT / 2 - this.gameOverLayout.height / 2) - 20, 305, 180);
     }
 
 }

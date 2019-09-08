@@ -11,11 +11,10 @@
 //                   "Y8888P88 888   T88b  "Y88888P"   "Y88888P"  888    Y888 8888888P"             
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOverd,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
-import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
+import {isGameOver} from './sharingVariables.js';
 export default class Ground {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent;
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
         this.pos = [220, 0];
@@ -28,21 +27,21 @@ export default class Ground {
     }
     // Definition de la collision avec sol.
     setGroundCollision() {
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
+        for (let y = 0; y < this.parent.HEIGHT; y++) {
+            for (let x = 0; x < this.parent.WIDTH; x++) {
                 if (y >= 222) {
-                    collisionArray[y][x].ground = 1;
+                    this.parent.collisionArray[y][x].ground = 1;
                 }
 
             }
         }
     }
     draw() {
-        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+        this.parent.CONTEXT.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
     }
     move() {
         this.setGroundCollision();
-        if(!gameOverd['buffer'])
+        if(!isGameOver['b'])
         {
             this.pos[1] -= 3;
         }

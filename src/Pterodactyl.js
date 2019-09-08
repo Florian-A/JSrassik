@@ -17,10 +17,8 @@
 //                                             ZZZZZZZZZZZZ                   
 //                                                                                                          
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import { context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOverd, score, collisionArray, clearedCollisionArray, restartRequested } from './sharingVariables.js';
-import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
-
+import { isGameOver } from './sharingVariables.js';
+import { drawImageRot } from './sharingFunctions.js';
 
 export default class Pterodactyl {
     constructor(parent) {
@@ -59,10 +57,10 @@ export default class Pterodactyl {
             this.imgPosX = 46;
             this.imgSteep = 0;
         }
-        if (!gameOverd['buffer']) {
+        if (!isGameOver['b']) {
             this.imgSteep++;
         }
-        drawImageRot(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.rotateDeg)
+        drawImageRot(this.parent.CONTEXT, this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.rotateDeg)
     }
     gravity() {
         if (this.collisionY === false) {
@@ -80,8 +78,8 @@ export default class Pterodactyl {
         else {
             this.collisionY = false;
         }
-        if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
-            if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
+        if (typeof (this.parent.collisionArray[this.posCollision[0]]) !== "undefined") {
+            if (this.parent.collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
                 this.collisionY = true;
             }
         }
@@ -89,8 +87,8 @@ export default class Pterodactyl {
         let collisionX;
         for (let index = 0; index <= this.imgHeight; index++) {
 
-            if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
-                if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+            if (typeof (this.parent.collisionArray[this.posCollision[0]]) !== "undefined") {
+                if (this.parent.collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
                     collisionX = true;
                 }
             }
@@ -106,21 +104,21 @@ export default class Pterodactyl {
             for (let x = this.pos[1]; x < this.posCollision[1]; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
-                    if (!gameOverd['buffer']) {
-                        if (typeof (collisionArray[y]) !== "undefined") {
-                            if (typeof (collisionArray[y][x]) !== "undefined") {
-                                collisionArray[y][x].player = 1;
+                    if (!isGameOver['b']) {
+                        if (typeof (this.parent.collisionArray[y]) !== "undefined") {
+                            if (typeof (this.parent.collisionArray[y][x]) !== "undefined") {
+                                this.parent.collisionArray[y][x].player = 1;
                             }
                         }
                     }
-                    if (typeof (collisionArray[y + 14]) !== "undefined") {
-                        if (typeof (collisionArray[y + 14][x]) !== "undefined") {
-                            collisionArray[y + 14][x].player = 0;
+                    if (typeof (this.parent.collisionArray[y + 14]) !== "undefined") {
+                        if (typeof (this.parent.collisionArray[y + 14][x]) !== "undefined") {
+                            this.parent.collisionArray[y + 14][x].player = 0;
                         }
                     }
-                    if (typeof (collisionArray[y]) !== "undefined") {
-                        if (typeof (collisionArray[y - this.imgHeight][x]) !== "undefined") {
-                            collisionArray[y - this.imgHeight][x].player = 0;
+                    if (typeof (this.parent.collisionArray[y]) !== "undefined") {
+                        if (typeof (this.parent.collisionArray[y - this.imgHeight][x]) !== "undefined") {
+                            this.parent.collisionArray[y - this.imgHeight][x].player = 0;
                         }
                     }
                 }
@@ -130,16 +128,16 @@ export default class Pterodactyl {
 
     }
     showCollision() {
-        if (debugLevel >= 2) {
-            context.fillStyle = "rgba(0,0,0,0.5)";
-            context.fillRect(this.pos[1], this.pos[0], this.posCollision[1] - this.pos[1], this.posCollision[0] - this.pos[0]);
-            context.fillStyle = "rgba(255,0,0,1)";
-            context.fillRect(this.pos[1], this.pos[0], 5, 5);
-            context.stroke();
+        if (this.parent.debugLevel >= 2) {
+            this.parent.CONTEXT.fillStyle = "rgba(0,0,0,0.5)";
+            this.parent.CONTEXT.fillRect(this.pos[1], this.pos[0], this.posCollision[1] - this.pos[1], this.posCollision[0] - this.pos[0]);
+            this.parent.CONTEXT.fillStyle = "rgba(255,0,0,1)";
+            this.parent.CONTEXT.fillRect(this.pos[1], this.pos[0], 5, 5);
+            this.parent.CONTEXT.stroke();
         }
     }
     jump() {
-        if (!gameOverd['buffer']) {
+        if (!isGameOver['b']) {
             this.rotateDeg = 0;
             this.collisionY = false;
             this.jumpInProgress = true;
@@ -174,29 +172,29 @@ export default class Pterodactyl {
             }
         })
         document.addEventListener("touchstart", (event) => {
-                this.jump();
-            
+            this.jump();
+
         })
     }
     restart() {
         this.pos = [70, 100];
         this.collisionY = false;
         this.collisionX = false;
-        restartRequested['buffer'] = false;
+        this.parent.restartRequested = false;
 
     }
     autoPlay() {
-        if (collisionArray[this.posCollision[0] + 15][this.posCollision[1]].ground === 1 || collisionArray[this.posCollision[0] + 15][this.posCollision[1]].cactus === 1) {
+        if (this.parent.collisionArray[this.posCollision[0] + 15][this.posCollision[1]].ground === 1 || this.parent.collisionArray[this.posCollision[0] + 15][this.posCollision[1]].cactus === 1) {
             this.jump();
         }
     }
     deadAnimation() {
-        if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 0) {
+        if (this.parent.collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 0) {
             this.pos[0] += this.parent.GRAVITY;
         }
     }
     move() {
-        if (restartRequested['buffer']) {
+        if (this.parent.restartRequested) {
             this.restart();
         }
 
@@ -204,12 +202,12 @@ export default class Pterodactyl {
             if (this.collisionX) {
                 this.jump();
             }
-            gameOverd['buffer'] = true;
+            isGameOver['b'] = true;
             this.deadAnimation();
         }
 
-        if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
-            if (collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
+        if (typeof (this.parent.collisionArray[this.posCollision[0]]) !== "undefined") {
+            if (this.parent.collisionArray[this.posCollision[0]][this.posCollision[1]].trex === 1 && this.trexCollision === false) {
                 this.trexCollision = true;
             }
             else {

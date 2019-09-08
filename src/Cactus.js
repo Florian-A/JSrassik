@@ -49,14 +49,14 @@
 //                                                MMMMMMMMMMM               
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////                 
-import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOverd,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
-import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
+import {isGameOver} from './sharingVariables.js';
+
 export default class Cactus {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent;
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
-        this.pos = [177, width];
+        this.pos = [185, this.parent.WIDTH];
         this.imgLayout = new Image();
         this.imgLayout.src = "./layout/obstacle.png";
         this.imgHeight = 50;
@@ -67,17 +67,17 @@ export default class Cactus {
         this.enabled = false;
     }
     draw() {
-        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+        this.parent.CONTEXT.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
     }
     localCollision() {
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
+        for (let y = 0; y < this.parent.HEIGHT; y++) {
+            for (let x = 0; x < this.parent.WIDTH; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
-                    collisionArray[y][x].cactus = 1;
+                    this.parent.collisionArray[y][x].cactus = 1;
 
-                    if (typeof (collisionArray[y][x + this.movementSpeed]) !== "undefined") {
-                        collisionArray[y][x + this.movementSpeed].cactus = 0;
+                    if (typeof (this.parent.collisionArray[y][x + this.movementSpeed]) !== "undefined") {
+                        this.parent.collisionArray[y][x + this.movementSpeed].cactus = 0;
                     }
                 }
             }
@@ -88,11 +88,11 @@ export default class Cactus {
     }
     disable() {
         this.enabled = false;
-        this.pos = [177, width];
+        this.pos = [185, this.parent.WIDTH];
     }
     move() {
         if (this.enabled === true) {
-            if(!gameOverd['buffer'])
+            if(!isGameOver['b'])
             {
                 this.pos[1] -= 3;
             }

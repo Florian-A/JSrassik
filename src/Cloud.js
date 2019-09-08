@@ -13,11 +13,11 @@
 //                       IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////  
-import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOverd,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
-import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
+import {isGameOver} from './sharingVariables.js';
+import {generateNumberBetween} from './sharingFunctions.js';
 export default class Cloud {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent;
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
         this.pos = [generateNumberBetween(20, 140), 0];
@@ -30,18 +30,18 @@ export default class Cloud {
         this.enabled = false;
     }
     draw() {
-        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+        this.parent.CONTEXT.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
     }
     enable() {
         this.enabled = true;
     }
     disable() {
         this.enabled = false;
-        this.pos = [generateNumberBetween(20, 140), width];
+        this.pos = [generateNumberBetween(20, 140), this.parent.WIDTH];
     }
     move() {
         if (this.enabled === true) {
-            if(!gameOverd['buffer']) {
+            if(!isGameOver['b']) {
                 this.pos[1] -= 2;
             }
             else {

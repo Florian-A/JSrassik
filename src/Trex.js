@@ -30,14 +30,14 @@
 //                                             MMMM      MMMM                
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import { context, height, width, fps, gravity } from './sharingConstants.js';
-import { debugLevel, debugMessage, intervalStarted, renderedFrame, gameOverd, score, collisionArray, clearedCollisionArray } from './sharingVariables.js';
-import { drawImageRot, generateNumberBetween } from './sharingFunctions.js';
+import { isGameOver } from './sharingVariables.js';
+
 export default class Trex {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent;
         // pos[0] ordonnée y.
         // pos[1] abscisse x.
-        this.pos = [150, width - 20];
+        this.pos = [190, this.parent.WIDTH - 20];
         this.imgLayout = new Image();
         this.imgLayout.src = "./layout/dino.png";
         this.imgHeight = 43;
@@ -49,7 +49,7 @@ export default class Trex {
         this.collisionY = false;
         this.collisionX = false;
         this.jumpInProgress = false;
-        this.roofOfJump = 70;
+        this.roofOfJump = 75;
         this.isDead = false;
         this.enabled = false;
     }
@@ -73,11 +73,11 @@ export default class Trex {
             this.imgPosX = 0;
             this.imgSteep = 0;
         }
-        context.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
+        this.parent.CONTEXT.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
     }
     gravity() {
         if (this.collisionY === false) {
-            this.pos[0] += gravity;
+            this.pos[0] += this.parent.GRAVITY;
         }
     }
     localCollision() {
@@ -86,10 +86,10 @@ export default class Trex {
         let collisionY;
         for (let index = 0; index <= this.imgWidth; index++) {
 
-            if (typeof (collisionArray[this.posCollision[0]]) !== "undefined") {
-                if (typeof (collisionArray[this.posCollision[0]][this.pos[1] + index]) !== "undefined") {
+            if (typeof (this.parent.collisionArray[this.posCollision[0]]) !== "undefined") {
+                if (typeof (this.parent.collisionArray[this.posCollision[0]][this.pos[1] + index]) !== "undefined") {
 
-                    if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+                    if (this.parent.collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
                         collisionY = true;
                     }
                 }
@@ -103,14 +103,13 @@ export default class Trex {
             this.collisionY = false;
         }
 
-        if (typeof (collisionArray[this.posCollision[0]][this.pos[1]]) !== "undefined") {
-
-            if (collisionArray[this.posCollision[0]][this.pos[1]].ground === 1) {
+        if (typeof (this.parent.collisionArray[this.posCollision[0] - 11][this.pos[1]]) !== "undefined") {
+            if (this.parent.collisionArray[this.posCollision[0] - 11][this.pos[1]].ground === 1) {
                 this.collisionY = true;
             }
         }
-        if (typeof (collisionArray[this.posCollision[0]][this.posCollision[1]]) !== "undefined") {
-            if (collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 1) {
+        if (typeof (this.parent.collisionArray[this.posCollision[0] - 11][this.posCollision[1]]) !== "undefined") {
+            if (this.parent.collisionArray[this.posCollision[0] - 11][this.posCollision[1]].ground === 1) {
                 this.collisionY = true;
             }
         }
@@ -118,8 +117,8 @@ export default class Trex {
         let collisionX;
         for (let index = 0; index <= this.imgHeight; index++) {
 
-            if (typeof (collisionArray[this.posCollision[0]][this.pos[1] + index]) !== "undefined") {
-                if (collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
+            if (typeof (this.parent.collisionArray[this.posCollision[0]][this.pos[1] + index]) !== "undefined") {
+                if (this.parent.collisionArray[this.posCollision[0]][this.pos[1] + index].cactus === 1) {
                     collisionX = true;
                 }
             }
@@ -132,24 +131,24 @@ export default class Trex {
             this.collisionX = false;
         }
 
-        for (let y = this.pos[0]; y < height; y++) {
-            for (let x = this.pos[1]; x < width; x++) {
+        for (let y = this.pos[0]; y < this.parent.HEIGHT; y++) {
+            for (let x = this.pos[1]; x < this.parent.WIDTH; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
 
-                    if (typeof (collisionArray[y][x]) !== "undefined") {
-                        collisionArray[y][x].trex = 1;
+                    if (typeof (this.parent.collisionArray[y][x]) !== "undefined") {
+                        this.parent.collisionArray[y][x].trex = 1;
                     }
-                    if (typeof (collisionArray[y][x + this.imgWidth + 5]) !== "undefined") {
-                        collisionArray[y][x + this.imgWidth + 5].trex = 0;
+                    if (typeof (this.parent.collisionArray[y][x + this.imgWidth + 5]) !== "undefined") {
+                        this.parent.collisionArray[y][x + this.imgWidth + 5].trex = 0;
                     }
-                    if (typeof (collisionArray[y + 10]) !== "undefined") {
-                        if (typeof (collisionArray[y + 10][x + 5]) !== "undefined") {
-                            collisionArray[y + 10][x + 5].trex = 0;
+                    if (typeof (this.parent.collisionArray[y + 10]) !== "undefined") {
+                        if (typeof (this.parent.collisionArray[y + 10][x + 5]) !== "undefined") {
+                            this.parent.collisionArray[y + 10][x + 5].trex = 0;
                         }
                     }
-                    if (typeof (collisionArray[y - this.imgHeight][x + 10]) !== "undefined") {
-                        collisionArray[y - this.imgHeight][x + 10].trex = 0;
+                    if (typeof (this.parent.collisionArray[y - this.imgHeight][x + 10]) !== "undefined") {
+                        this.parent.collisionArray[y - this.imgHeight][x + 10].trex = 0;
                     }
                 }
             }
@@ -182,32 +181,31 @@ export default class Trex {
     }
     disable() {
         this.enabled = false;
-        this.pos = [150, width];
+        this.pos = [190, this.parent.WIDTH];
         this.isDead = false;
     }
     dead() {
         if (!this.isDead) {
-            score['buffer'] += 1;
+            this.parent.score += 1;
         }
         this.isDead = true;
-        debugMessage['buffer'] = score['buffer'];
 
-        for (let y = this.pos[0]; y < height; y++) {
-            for (let x = this.pos[1]; x < width; x++) {
+        for (let y = this.pos[0]; y < this.parent.HEIGHT; y++) {
+            for (let x = this.pos[1]; x < this.parent.WIDTH; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
 
-                    if (typeof (collisionArray[y][x]) !== "undefined") {
-                        collisionArray[y][x].trex = 0;
+                    if (typeof (this.parent.collisionArray[y][x]) !== "undefined") {
+                        this.parent.collisionArray[y][x].trex = 0;
                     }
-                    if (typeof (collisionArray[y][x + this.imgWidth + 2]) !== "undefined") {
-                        collisionArray[y][x + this.imgWidth + 2].trex = 0;
+                    if (typeof (this.parent.collisionArray[y][x + this.imgWidth + 2]) !== "undefined") {
+                        this.parent.collisionArray[y][x + this.imgWidth + 2].trex = 0;
                     }
-                    if (typeof (collisionArray[y + 2]) !== "undefined") {
-                        collisionArray[y + 2][x + 2].trex = 0;
+                    if (typeof (this.parent.collisionArray[y + 2]) !== "undefined") {
+                        this.parent.collisionArray[y + 2][x + 2].trex = 0;
                     }
-                    if (typeof (collisionArray[y - this.imgHeight][x + 2]) !== "undefined") {
-                        collisionArray[y - this.imgHeight][x + 2].trex = 0;
+                    if (typeof (this.parent.collisionArray[y - this.imgHeight][x + 2]) !== "undefined") {
+                        this.parent.collisionArray[y - this.imgHeight][x + 2].trex = 0;
                     }
                 }
             }
@@ -215,7 +213,7 @@ export default class Trex {
 
     }
     deadAnimation() {
-        if (this.pos[0] <= height) {
+        if (this.pos[0] <= this.parent.HEIGHT) {
             this.pos[1] -= 3;
             this.pos[0] += 2;
         }
@@ -232,7 +230,7 @@ export default class Trex {
             }
             else {
 
-                if (!gameOverd['buffer']) {
+                if (!isGameOver['b']) {
                     this.pos[1] -= 5;
                 }
                 else {
@@ -243,16 +241,16 @@ export default class Trex {
                 this.localCollision();
                 this.gravity();
                 this.jumpControl();
-                if (typeof (collisionArray[this.pos[0]][this.pos[1] - 10]) !== "undefined") {
-                    if (collisionArray[this.pos[0]][this.pos[1] - 10].cactus === 1) {
+                if (typeof (this.parent.collisionArray[this.pos[0]][this.pos[1] - 10]) !== "undefined") {
+                    if (this.parent.collisionArray[this.pos[0]][this.pos[1] - 10].cactus === 1) {
                         this.jump();
                     }
                 }
             }
 
-            if (typeof (collisionArray[this.pos[0]]) !== "undefined") {
-                if (typeof (collisionArray[this.pos[0]][this.pos[1]]) !== "undefined") {
-                    if (collisionArray[this.pos[0]][this.pos[1]].player === 1) {
+            if (typeof (this.parent.collisionArray[this.pos[0]]) !== "undefined") {
+                if (typeof (this.parent.collisionArray[this.pos[0]][this.pos[1]]) !== "undefined") {
+                    if (this.parent.collisionArray[this.pos[0]][this.pos[1]].player === 1) {
                         this.dead();
                     }
                 }

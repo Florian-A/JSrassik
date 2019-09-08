@@ -10,22 +10,18 @@
 //         "Y8888P"   "Y88888P"  88888888 88888888 8888888  "Y8888P" 8888888  "Y88888P"  888    Y888 
 // 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {context,height,width,fps,gravity} from './sharingConstants.js';
-import {debugLevel,debugMessage,intervalStarted,renderedFrame,gameOver,score,collisionArray,clearedCollisionArray} from './sharingVariables.js';
-import {drawImageRot,generateNumberBetween} from './sharingFunctions.js';
-
-
 
 export default class Collision {
-    constructor() {
+    constructor(parent) {
+        this.parent = parent
         this.initCollision();
     }
     // Initialisation du système de collision.
     initCollision() {
-        for (let y = 0; y < height; y++) {
-            collisionArray[y] = [];
-            for (let x = 0; x < width+100; x++) {
-                collisionArray[y][x] = { y: y, x: x, player: 0, ground: 0, cactus: 0, leaf: 0, trex: 0 };
+        for (let y = 0; y < this.parent.HEIGHT; y++) {
+            this.parent.collisionArray[y] = [];
+            for (let x = 0; x < this.parent.WIDTH+100; x++) {
+                this.parent.collisionArray[y][x] = { y: y, x: x, player: 0, ground: 0, cactus: 0, leaf: 0, trex: 0 };
             }
         }
     }
