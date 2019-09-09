@@ -1,1 +1,10 @@
-baseurl: "/dist"
+image: alpine:latest
+pages:
+  stage: deploy
+  script:
+  - echo 'Nothing!'
+  artifacts:
+    paths:
+    - dist/
+  only:
+  - master
