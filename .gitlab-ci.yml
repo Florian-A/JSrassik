@@ -2,7 +2,7 @@ image: alpine:latest
 pages:
   stage: deploy
   script:
-    - cp -r dist public
+    - cp dist/* public
   artifacts:
     paths:
     - public
