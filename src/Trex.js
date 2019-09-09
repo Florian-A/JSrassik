@@ -30,7 +30,7 @@
 //                                             MMMM      MMMM                
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import { isGameOver } from './sharingVariables.js';
+import { sharingGameOver, sharingScore } from './sharingVariables.js';
 
 export default class Trex {
     constructor(parent) {
@@ -186,7 +186,7 @@ export default class Trex {
     }
     dead() {
         if (!this.isDead) {
-            this.parent.score += 1;
+            sharingScore['b'] += 1;
         }
         this.isDead = true;
 
@@ -230,7 +230,7 @@ export default class Trex {
             }
             else {
 
-                if (!isGameOver['b']) {
+                if (!sharingGameOver['b']) {
                     this.pos[1] -= 5;
                 }
                 else {

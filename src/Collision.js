@@ -13,7 +13,8 @@
 
 export default class Collision {
     constructor(parent) {
-        this.parent = parent
+        this.parent = parent;
+        this.blankCollision = [];
         this.initCollision();
     }
     // Initialisation du système de collision.
@@ -24,9 +25,12 @@ export default class Collision {
                 this.parent.collisionArray[y][x] = { y: y, x: x, player: 0, ground: 0, cactus: 0, leaf: 0, trex: 0 };
             }
         }
-    }
 
-    clearCollision() {
-
+        for (let y = 0; y < this.parent.HEIGHT; y++) {
+            this.blankCollision[y] = [];
+            for (let x = 0; x < this.parent.WIDTH+100; x++) {
+                this.blankCollision[y][x] = { y: y, x: x, player: 0, ground: 0, cactus: 0, leaf: 0, trex: 0 };
+            }
+        }
     }
 }

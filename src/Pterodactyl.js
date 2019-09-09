@@ -17,7 +17,7 @@
 //                                             ZZZZZZZZZZZZ                   
 //                                                                                                          
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import { isGameOver } from './sharingVariables.js';
+import { sharingGameOver } from './sharingVariables.js';
 import { drawImageRot } from './sharingFunctions.js';
 
 export default class Pterodactyl {
@@ -57,7 +57,7 @@ export default class Pterodactyl {
             this.imgPosX = 46;
             this.imgSteep = 0;
         }
-        if (!isGameOver['b']) {
+        if (!sharingGameOver['b']) {
             this.imgSteep++;
         }
         drawImageRot(this.parent.CONTEXT, this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.rotateDeg)
@@ -104,7 +104,7 @@ export default class Pterodactyl {
             for (let x = this.pos[1]; x < this.posCollision[1]; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
-                    if (!isGameOver['b']) {
+                    if (!sharingGameOver['b']) {
                         if (typeof (this.parent.collisionArray[y]) !== "undefined") {
                             if (typeof (this.parent.collisionArray[y][x]) !== "undefined") {
                                 this.parent.collisionArray[y][x].player = 1;
@@ -137,7 +137,7 @@ export default class Pterodactyl {
         }
     }
     jump() {
-        if (!isGameOver['b']) {
+        if (!sharingGameOver['b']) {
             this.rotateDeg = 0;
             this.collisionY = false;
             this.jumpInProgress = true;
@@ -192,6 +192,16 @@ export default class Pterodactyl {
         if (this.parent.collisionArray[this.posCollision[0]][this.posCollision[1]].ground === 0) {
             this.pos[0] += this.parent.GRAVITY;
         }
+
+        for (let y = this.pos[0]-20; y < this.posCollision[0]; y++) {
+            for (let x = this.pos[1]; x < this.posCollision[1]; x++) {
+
+                            this.parent.collisionArray[y][x].player = 0;
+                    
+            }
+        }
+
+
     }
     move() {
         if (this.parent.restartRequested) {
@@ -202,7 +212,7 @@ export default class Pterodactyl {
             if (this.collisionX) {
                 this.jump();
             }
-            isGameOver['b'] = true;
+            sharingGameOver['b'] = true;
             this.deadAnimation();
         }
 

@@ -49,7 +49,7 @@
 //                                                MMMMMMMMMMM               
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////                 
-import {isGameOver} from './sharingVariables.js';
+import {sharingGameOver} from './sharingVariables.js';
 
 export default class Cactus {
     constructor(parent) {
@@ -92,7 +92,7 @@ export default class Cactus {
     }
     move() {
         if (this.enabled === true) {
-            if(!isGameOver['b'])
+            if(!sharingGameOver['b'])
             {
                 this.pos[1] -= 3;
             }

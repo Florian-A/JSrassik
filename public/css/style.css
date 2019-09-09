@@ -1,6 +1,12 @@
+@font-face {
+    font-family: 'joystix';
+    src: url('../font/joystix-monospace.ttf')  format('truetype');
+  }
+
 html {
-    font-family: monospace;
+    font-family: joystix;
 }
+
 body {
     margin:0px;
     background-color: #f7f7f7;

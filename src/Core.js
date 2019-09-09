@@ -10,7 +10,7 @@
 //                                  "Y8888P"   "Y88888P"  888   T88b 8888888888
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import { debugMessage, isGameOver } from './sharingVariables.js';
+import { debugMessage, sharingGameOver, sharingScore } from './sharingVariables.js';
 
 import Debug from './Debug.js';
 import Cactus from './Cactus.js';
@@ -19,6 +19,7 @@ import Ground from './Ground.js';
 import Collision from './Collision.js';
 import Trex from './Trex.js';
 import Pterodactyl from './Pterodactyl';
+import Score from './Score.js';
 import GameOver from './GameOver.js';
 import Responsive from './Responsive.js';
 
@@ -41,9 +42,6 @@ export default class Core {
 
         // Definition du nombre d'images rendus.
         this.renderedFrame = 0;
-
-        // Definition du socre.
-        this.score = 0;
 
         // Definition du tableau des collisions.
         this.collisionArray = [];
@@ -100,6 +98,12 @@ export default class Core {
         // Ajout de l'objet Responsive.
         this.responsive = new Responsive(this);
 
+        // Ajout de l'objet Score.
+        this.score = new Score(this);
+        
+        // Enregistrement du meilleur score dans le local storage.
+        this.local = localStorage;
+
         // Ajout de l'objet Gameover.
         this.gameOver = new GameOver(this);
 
@@ -128,28 +132,26 @@ export default class Core {
         document.addEventListener('keydown', (event) => {
             if (event.which === 36) {
                 this.startInterval();
-                isGameOverd['b'] = false;
+                sharingGameOver['b'] = false;
             }
             if (event.which === 35) {
                 this.breakInterval();
             }
             if (event.which === 45) {
                 this.nextInterval();
-                isGameOverd['b'] = false;
+                sharingGameOver['b'] = false;
             }
         })
     }
     intervalLoop() {
 
+        debugMessage['b'] = sharingScore['b'];
+
         // Debut du mesure du nombre d'images par secondes.
         this.debug.startPerfMeasurement();
 
-        debugMessage['buffer'] = this.score;
-
         // Compteur du nombre de frames totales.
         this.renderedFrame++;
-
-        this.collision.clearCollision();
 
         // Dessin du fond d'ecran.
         this.CONTEXT.drawImage(this.background, 0, 0, 600, 250);
@@ -194,7 +196,7 @@ export default class Core {
         this.cactus[2].move();
 
         // Activation et animation des cactus.
-        if (!isGameOver['b']) {
+        if (!sharingGameOver['b']) {
             if (this.renderedFrame % 50 === 49) {
                 this.trex[0].enable();
             }
@@ -213,6 +215,11 @@ export default class Core {
         // Animation et gestion du personnage principal
         this.player.move();
 
+        // Affichage du score.
+        this.score.draw();
+        if (sharingScore['b'] > this.local.score) {
+            localStorage.setItem('score', sharingScore['b'])
+        }
 
         this.gameOver.check();
 

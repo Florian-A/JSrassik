@@ -1,4 +1,4 @@
-import {isGameOver} from './sharingVariables.js';
+import { sharingGameOver, sharingScore } from './sharingVariables.js';
 
 export default class GameOver {
     constructor(parent) {
@@ -7,23 +7,41 @@ export default class GameOver {
         // Creation du message de fin du jeu.
         this.gameOverLayout = new Image();
         this.gameOverLayout.src = "./layout/gameover.png";
+        // Affichage de la fin du jeu.
+        this.gameOverDisplayed = false;
+        this.restardAuthorized = false;
     }
     check() {
-        if (isGameOver['b']) {
-            this.draw();
-            this.setHotKey();
+        if (sharingGameOver['b']) {
+
+            if (this.parent.renderedFrame % 150 === 149) {
+                this.gameOverDisplayed = true;
+            }
+            if (this.gameOverDisplayed) {
+
+                this.draw();
+                this.setHotKey();
+            }
         }
     }
 
     restart(event) {
-        if (isGameOver['b']) {
-            this.parent.score = 0;
-            this.parent.restartRequested = true;
-            isGameOver['b'] = false;
+
+        if (event.code === "Space" || event.touches) {
+            if (sharingGameOver['b'] && this.gameOverDisplayed && this.restardAuthorized) {
+                sharingScore['b'] = 0;
+                this.parent.restartRequested = true;
+                this.gameOverDisplayed = false;
+                this.restardAuthorized = false;
+                sharingGameOver['b'] = false;
+            }
         }
     }
 
     setHotKey() {
+        if (this.parent.renderedFrame % 150 === 149) {
+            this.restardAuthorized = true;
+        }
         document.addEventListener("keydown", () => this.restart(event));
         document.addEventListener("touchstart", () => this.restart(event));
     }
