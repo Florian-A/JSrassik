@@ -2,9 +2,7 @@ image: alpine:latest
 pages:
   stage: deploy
   script:
-    - mkdir .public
-    - cp -r dist/* .public
-    - mv .public public
+    - cp -r dist/* .
   artifacts:
     paths:
     - public
