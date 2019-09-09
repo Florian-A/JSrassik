@@ -11,6 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { debugMessage, sharingGameOver, sharingScore } from './sharingVariables.js';
+import { generateNumberBetween } from './sharingFunctions.js';
 
 import Debug from './Debug.js';
 import Cactus from './Cactus.js';
@@ -29,6 +30,7 @@ export default class Core {
         // Definition des constantes.
         this.GRAVITY = 4;
         this.FPS = 58;
+        this.DIFFICULTY = 10;
 
         // Selection du canvas et definition de sa taille.
         this.CANVAS = document.querySelector(".game > div > canvas");
@@ -100,7 +102,7 @@ export default class Core {
 
         // Ajout de l'objet Score.
         this.score = new Score(this);
-        
+
         // Enregistrement du meilleur score dans le local storage.
         this.local = localStorage;
 
@@ -161,19 +163,29 @@ export default class Core {
 
         // Activation et animation des nuages.
         if (this.renderedFrame % 24 === 23) {
-            this.cloud[0].enable();
+            if (generateNumberBetween(0, 1)) {
+                this.cloud[0].enable();
+            }
         }
-        if (this.renderedFrame % 60 === 59) {
-            this.cloud[1].enable();
+        else if (this.renderedFrame % 87 === 86) {
+            if (generateNumberBetween(0, 1)) {
+                this.cloud[1].enable();
+            }
         }
-        if (this.renderedFrame % 90 === 110) {
-            this.cloud[2].enable();
+        else if (this.renderedFrame % 174 === 173) {
+            if (generateNumberBetween(0, 1)) {
+                this.cloud[2].enable();
+            }
         }
-        if (this.renderedFrame % 130 === 160) {
-            this.cloud[3].enable();
+        else if (this.renderedFrame % 297 === 296) {
+            if (generateNumberBetween(0, 1)) {
+                this.cloud[3].enable();
+            }
         }
-        if (this.renderedFrame % 130 === 200) {
-            this.cloud[4].enable();
+        else if (this.renderedFrame % 400 === 399) {
+            if (generateNumberBetween(0, 1)) {
+                this.cloud[4].enable();
+            }
         }
         this.cloud[0].move();
         this.cloud[1].move();
@@ -182,14 +194,20 @@ export default class Core {
         this.cloud[4].move();
 
         // Activation et animation des cactus.
-        if (this.renderedFrame % 50 === 49) {
-            this.cactus[0].enable();
+        if (this.renderedFrame % 49 === 48) {
+            if (generateNumberBetween(0, 1) && sharingScore['b'] > 5) {
+                this.cactus[0].enable();
+            }
         }
-        if (this.renderedFrame % 100 === 99) {
-            this.cactus[1].enable();
+        if (this.renderedFrame % 237 === 236) {
+            if (generateNumberBetween(0, 1) && sharingScore['b'] > 5) {
+                this.cactus[1].enable();
+            }
         }
-        if (this.renderedFrame % 300 === 299) {
-            this.cactus[2].enable();
+        if (this.renderedFrame % 463 === 462) {
+            if (generateNumberBetween(0, 1) && sharingScore['b'] > 5) {
+                this.cactus[2].enable();
+            }
         }
         this.cactus[0].move();
         this.cactus[1].move();
@@ -197,14 +215,25 @@ export default class Core {
 
         // Activation et animation des cactus.
         if (!sharingGameOver['b']) {
-            if (this.renderedFrame % 50 === 49) {
-                this.trex[0].enable();
+            if (this.renderedFrame % 87 === 86) {
+                if (generateNumberBetween(0, 1)) {
+                    this.trex[0].enable();
+                }
             }
-            if (this.renderedFrame % 100 === 99) {
-                this.trex[1].enable();
+            else if (this.renderedFrame % 163 === 162) {
+                if (generateNumberBetween(0, 1)) {
+                    this.trex[1].enable();
+                }
             }
-            if (this.renderedFrame % 300 === 299) {
-                this.trex[2].enable();
+            else if (this.renderedFrame % 255 === 254) {
+                if (generateNumberBetween(0, 1)) {
+                    this.trex[2].enable();
+                }
+            }
+            else if (this.renderedFrame % 578 === 577) {
+                if (generateNumberBetween(0, 1)) {
+                    this.trex[3].enable();
+                }
             }
         }
         this.trex[0].move();

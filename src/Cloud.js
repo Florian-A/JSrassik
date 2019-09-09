@@ -13,7 +13,7 @@
 //                       IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////  
-import {sharingGameOver} from './sharingVariables.js';
+import {sharingGameOver, sharingScore} from './sharingVariables.js';
 import {generateNumberBetween} from './sharingFunctions.js';
 export default class Cloud {
     constructor(parent) {
@@ -42,7 +42,7 @@ export default class Cloud {
     move() {
         if (this.enabled === true) {
             if(!sharingGameOver['b']) {
-                this.pos[1] -= 2;
+                this.pos[1] -= 2 + Math.floor((sharingScore['b']/this.parent.DIFFICULTY));
             }
             else {
                 this.pos[1] -= 0.1;

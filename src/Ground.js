@@ -11,7 +11,7 @@
 //                   "Y8888P88 888   T88b  "Y88888P"   "Y88888P"  888    Y888 8888888P"             
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import {sharingGameOver} from './sharingVariables.js';
+import {sharingGameOver, sharingScore} from './sharingVariables.js';
 export default class Ground {
     constructor(parent) {
         this.parent = parent;
@@ -43,7 +43,7 @@ export default class Ground {
         this.setGroundCollision();
         if(!sharingGameOver['b'])
         {
-            this.pos[1] -= 3;
+            this.pos[1] -= 3 + Math.floor((sharingScore['b']/this.parent.DIFFICULTY));
         }
         if (this.pos[1] <= -1200) {
             this.pos[1] = 0;

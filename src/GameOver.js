@@ -10,6 +10,7 @@ export default class GameOver {
         // Affichage de la fin du jeu.
         this.gameOverDisplayed = false;
         this.restardAuthorized = false;
+        this.animationSwitch = false;
     }
     check() {
         if (sharingGameOver['b']) {
@@ -49,7 +50,17 @@ export default class GameOver {
     draw() {
         this.parent.CONTEXT.fillStyle = "rgba(247,247,247,0.9)";
         this.parent.CONTEXT.fillRect(0, 0, this.parent.WIDTH, this.parent.HEIGHT);
-        this.parent.CONTEXT.drawImage(this.gameOverLayout, Math.round(this.parent.WIDTH / 2 - this.gameOverLayout.width / 2), Math.round(this.parent.HEIGHT / 2 - this.gameOverLayout.height / 2) - 20, 305, 180);
+
+        if (this.parent.renderedFrame % 65 === 64) {
+            this.animationSwitch = !this.animationSwitch;
+        }
+
+        if (this.animationSwitch) {
+            this.parent.CONTEXT.drawImage(this.gameOverLayout, 0, 0, 305, 180, Math.round(this.parent.WIDTH / 2 - this.gameOverLayout.width / 2), Math.round(this.parent.HEIGHT / 2 - this.gameOverLayout.height / 2), 305, 180);
+        }
+        else {
+            this.parent.CONTEXT.drawImage(this.gameOverLayout, 0, 0, 305, 40, Math.round(this.parent.WIDTH / 2 - this.gameOverLayout.width / 2), 80, 305, 40);
+        }
     }
 
 }

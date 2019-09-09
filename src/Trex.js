@@ -132,7 +132,7 @@ export default class Trex {
         }
 
         for (let y = this.pos[0]; y < this.parent.HEIGHT; y++) {
-            for (let x = this.pos[1]; x < this.parent.WIDTH; x++) {
+            for (let x = this.pos[1]; x < 200; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
 
@@ -156,6 +156,24 @@ export default class Trex {
 
     }
     jump() {
+        if (sharingScore['b'] >= this.parent.DIFFICULTY) {
+            this.roofOfJump = 85;
+        }
+        else if (sharingScore['b'] >= this.parent.DIFFICULTY*2) {
+            this.roofOfJump = 95;
+        }
+        else if (sharingScore['b'] >= this.parent.DIFFICULTY*3) {
+            this.roofOfJump = 105;
+        }
+        else if (sharingScore['b'] >= this.parent.DIFFICULTY*4) {
+            this.roofOfJump = 115;
+        }
+        else if (sharingScore['b'] >= this.parent.DIFFICULTY*5) {
+            this.roofOfJump = 125;
+        }
+        else if (sharingScore['b'] >= this.parent.DIFFICULTY*6) {
+            this.roofOfJump = 135;
+        }
         this.collisionY = false;
         this.jumpInProgress = true;
     }
@@ -191,7 +209,7 @@ export default class Trex {
         this.isDead = true;
 
         for (let y = this.pos[0]; y < this.parent.HEIGHT; y++) {
-            for (let x = this.pos[1]; x < this.parent.WIDTH; x++) {
+            for (let x = this.pos[1]; x < this.parent.WIDTH + Math.floor((sharingScore['b']/this.parent.DIFFICULTY)); x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
 
@@ -214,7 +232,7 @@ export default class Trex {
     }
     deadAnimation() {
         if (this.pos[0] <= this.parent.HEIGHT) {
-            this.pos[1] -= 3;
+            this.pos[1] -= 3 + Math.floor((sharingScore['b']/this.parent.DIFFICULTY));
             this.pos[0] += 2;
         }
         else {
@@ -231,7 +249,7 @@ export default class Trex {
             else {
 
                 if (!sharingGameOver['b']) {
-                    this.pos[1] -= 5;
+                    this.pos[1] -= 5 + Math.floor((sharingScore['b']/this.parent.DIFFICULTY));
                 }
                 else {
                     this.pos[1] -= 2;

@@ -49,7 +49,7 @@
 //                                                MMMMMMMMMMM               
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////                 
-import {sharingGameOver} from './sharingVariables.js';
+import {sharingGameOver, sharingScore} from './sharingVariables.js';
 
 export default class Cactus {
     constructor(parent) {
@@ -76,8 +76,8 @@ export default class Cactus {
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
                     this.parent.collisionArray[y][x].cactus = 1;
 
-                    if (typeof (this.parent.collisionArray[y][x + this.movementSpeed]) !== "undefined") {
-                        this.parent.collisionArray[y][x + this.movementSpeed].cactus = 0;
+                    if (typeof (this.parent.collisionArray[y][x + this.movementSpeed + Math.floor((sharingScore['b']/this.parent.DIFFICULTY))]) !== "undefined") {
+                        this.parent.collisionArray[y][x + this.movementSpeed + Math.floor((sharingScore['b']/this.parent.DIFFICULTY))].cactus = 0;
                     }
                 }
             }
@@ -94,7 +94,7 @@ export default class Cactus {
         if (this.enabled === true) {
             if(!sharingGameOver['b'])
             {
-                this.pos[1] -= 3;
+                this.pos[1] -= 3 + Math.floor((sharingScore['b']/this.parent.DIFFICULTY));
             }
             this.localCollision();
             this.draw();
