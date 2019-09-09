@@ -5,6 +5,6 @@ pages:
   - echo 'Nothing!'
   artifacts:
     paths:
-    - dist/
+    - dist
   only:
   - master
