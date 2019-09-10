@@ -10,7 +10,7 @@ En attendant les progrès en clonage d’animaux préhistoriques, je propose un 
 
 Je me suis inspiré des mécaniques de [Flappy Bird](https://flappybird.io/) et des textures ainsi que de certaines mécaniques de [Google T-rex-runner](chrome://dino/) pour imaginer ce jeu.
 
-J'ai décidé d'utiliser les [<canvas> HTML](https://developer.mozilla.org/fr/docs/Web/HTML/Element/canvas) pour réalise ce projet, aucun framework n'a été utilisé.
+J'ai décidé d'utiliser les [canvas HTML](https://developer.mozilla.org/fr/docs/Web/HTML/Element/canvas) pour réalise ce projet, aucun framework n'a été utilisé.
 
   ![](./conception/mockup/trex.png)+ ![](./conception/mockup/flapybird.png) = ![](./conception/mockup/pterodactyl.gif)  
 
