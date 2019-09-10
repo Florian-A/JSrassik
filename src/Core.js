@@ -106,6 +106,8 @@ export default class Core {
         // Enregistrement du meilleur score dans le local storage.
         this.local = localStorage;
 
+        console.log(this.local);
+
         // Ajout de l'objet Gameover.
         this.gameOver = new GameOver(this);
 
@@ -246,7 +248,8 @@ export default class Core {
 
         // Affichage du score.
         this.score.draw();
-        if (sharingScore['b'] > this.local.score) {
+
+        if (sharingScore['b'] > this.local.score || !this.local.score ) {
             localStorage.setItem('score', sharingScore['b'])
         }
 
