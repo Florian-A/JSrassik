@@ -1,4 +1,4 @@
-# SPL Projet II: JSrassiK ([jsrassik.xyz](http://jsrassik.xyz))
+# SPL Projet II: JSrassiK ([jsrassik.xyz](http://www.jsrassik.xyz/))
 
 ## 🗨️ Présentation du projet :
 
