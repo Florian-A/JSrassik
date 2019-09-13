@@ -46,3 +46,7 @@ J'ai décidé d'utiliser les [canvas HTML](https://developer.mozilla.org/fr/docs
 ## 🎮 Démonstration :
 
 ![](./conception/readme/demo.gif)
+
+## 🎬 Presentation :
+
+[https://www.slideshare.net/secret/5nfiPI1EVdkBNu](https://www.slideshare.net/secret/5nfiPI1EVdkBNu)
