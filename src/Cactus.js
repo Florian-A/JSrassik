@@ -69,8 +69,10 @@ export default class Cactus {
     draw() {
         this.parent.CONTEXT.drawImage(this.imgLayout, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight, this.pos[1], this.pos[0], this.imgWidth, this.imgHeight);
     }
+    // Mise a jour des informations de collision dans le tableau collision.
     localCollision() {
-        for (let y = 0; y < this.parent.HEIGHT; y++) {
+        // La boucle va parcourir tout le tableau de collission afin de definir la collision du cactus.
+        for (let y = 185; y < this.parent.HEIGHT; y++) {
             for (let x = 0; x < this.parent.WIDTH; x++) {
 
                 if (y >= this.pos[0] && y <= this.pos[0] + this.imgHeight && x >= this.pos[1] && x <= this.pos[1] + this.imgWidth) {
@@ -86,6 +88,7 @@ export default class Cactus {
     enable() {
         this.enabled = true;
     }
+    // Desactivation du cactus et assignation de sa position a droite du canvas, 
     disable() {
         this.enabled = false;
         this.pos = [185, this.parent.WIDTH];

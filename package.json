@@ -4,7 +4,7 @@
   "description": "Petit jeu JS dont le but est d'attraper des Tyrannosaurus Rex.",
   "main": "index.js",
   "scripts": {
-    "build": "watch webpack || watch cp -R ./public/* ./dist/"
+    "build": "watch webpack & cp -R ./public/* ./dist/"
   },
   "repository": {
     "type": "git",

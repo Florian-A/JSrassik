@@ -30,7 +30,7 @@ export default class Core {
         // Definition des constantes.
         this.GRAVITY = 4;
         this.FPS = 58;
-        this.DIFFICULTY = 10;
+        this.DIFFICULTY = 7;
 
         // Selection du canvas et definition de sa taille.
         this.CANVAS = document.querySelector(".game > div > canvas");
@@ -104,9 +104,7 @@ export default class Core {
         this.score = new Score(this);
 
         // Enregistrement du meilleur score dans le local storage.
-        this.local = localStorage;
-
-        console.log(this.local);
+        this.local = localStorage;;
 
         // Ajout de l'objet Gameover.
         this.gameOver = new GameOver(this);
@@ -197,17 +195,17 @@ export default class Core {
 
         // Activation et animation des cactus.
         if (this.renderedFrame % 49 === 48) {
-            if (generateNumberBetween(0, 1) && sharingScore['b'] > 5) {
+            if (generateNumberBetween(0, 1) && sharingScore['b'] > 1) {
                 this.cactus[0].enable();
             }
         }
         if (this.renderedFrame % 237 === 236) {
-            if (generateNumberBetween(0, 1) && sharingScore['b'] > 5) {
+            if (generateNumberBetween(0, 1) && sharingScore['b'] > 1) {
                 this.cactus[1].enable();
             }
         }
         if (this.renderedFrame % 463 === 462) {
-            if (generateNumberBetween(0, 1) && sharingScore['b'] > 5) {
+            if (generateNumberBetween(0, 1) && sharingScore['b'] > 1) {
                 this.cactus[2].enable();
             }
         }
