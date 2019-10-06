@@ -104,7 +104,7 @@ export default class Core {
         this.score = new Score(this);
 
         // Enregistrement du meilleur score dans le local storage.
-        this.local = localStorage;;
+        this.local = localStorage;
 
         // Ajout de l'objet Gameover.
         this.gameOver = new GameOver(this);
