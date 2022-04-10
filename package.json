@@ -4,7 +4,8 @@
   "description": "Petit jeu JS dont le but est d'attraper des Tyrannosaurus Rex.",
   "main": "index.js",
   "scripts": {
-    "build": "watch webpack & cp -R ./public/* ./dist/"
+    "build": "webpack --config webpack.prod.js & cp -R ./public/* ./dist/",
+    "dev": "webpack --config webpack.dev.js & cp -R ./public/* ./dist/"
   },
   "repository": {
     "type": "git",
@@ -13,9 +14,9 @@
   "author": "Florian A",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://gitlab.com/Florian_A/jsrassik/issues"
+    "url": "https://github.com/Florian-A/JSrassik/issues"
   },
-  "homepage": "https://gitlab.com/Florian_A/jsrassik#readme",
+  "homepage": "https://github.com/Florian-A/JSrassik#readme",
   "devDependencies": {
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
