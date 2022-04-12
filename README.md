@@ -15,11 +15,6 @@ J'ai décidé d'utiliser les [canvas HTML](https://developer.mozilla.org/fr/docs
 
 ---
 
-### Diagramme de structure :
-
-![](./conception/uml/structure.png)
-
-
 ### Transpilation :
 
 La commande pour transpiler l'ensemble du projet :
@@ -44,4 +39,8 @@ npm run build
 ### Capture d'écran du jeu :
 
 ![](./conception/readme/demo.gif)
+
+### Diagramme de structure :
+
+![](./conception/uml/structure.png)
 
