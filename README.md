@@ -14,8 +14,6 @@ J'ai décidé d'utiliser les [canvas HTML](https://developer.mozilla.org/fr/docs
 
 ### Diagramme de structure :
 
-!(./conception/uml/usecase.png)
-
 ![](./conception/uml/structure.png)
 
 

@@ -4,8 +4,9 @@
   "description": "Petit jeu JS dont le but est d'attraper des Tyrannosaurus Rex.",
   "main": "index.js",
   "scripts": {
+    "dev": "webpack --config webpack.dev.js & cp -R ./public/* ./dist/",
     "build": "webpack --config webpack.prod.js & cp -R ./public/* ./dist/",
-    "dev": "webpack --config webpack.dev.js & cp -R ./public/* ./dist/"
+    "deploy": "webpack --config webpack.prod.js & cp -R ./public/* ./dist/ && cp -R ./dist/ ./docs"
   },
   "repository": {
     "type": "git",
