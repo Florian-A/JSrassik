@@ -1,4 +1,7 @@
-# JSrassiK ([jsrassik.xyz](http://localhost/))
+<h1 align="center">JSrassiK</h1>
+<p align="center"><a href="https://florian-a.github.io/JSrassik/">Jouez maintenant !</a></p>
+
+---
 
 Enfant, j'aimais les dinosaures (comme beaucoup d'enfants), d'ailleurs qui n'aime pas les dinosaures ?
 
