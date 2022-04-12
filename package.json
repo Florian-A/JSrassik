@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack --config webpack.dev.js & cp -R ./public/* ./dist/",
     "build": "webpack --config webpack.prod.js & cp -R ./public/* ./dist/",
-    "deploy": "webpack --config webpack.prod.js & cp -R ./public/* ./dist/ && cp -R ./dist/ ./docs"
+    "deploy": "webpack --config webpack.prod.js & cp -R ./public/* ./dist/ && cp -R ./dist/ ./docs && git add . && git commit -m \"Deploy commit\" && git push"
   },
   "repository": {
     "type": "git",
