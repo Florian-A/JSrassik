@@ -11,7 +11,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: [16.x]
-      - run: |
+      - name: deploy
+        run: |
         npm install
         npx webpack
         npm run deploy
