@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     strategy:
@@ -14,9 +15,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
     - name: deploy
-      run: |
-      npm install
-      npx webpack
-      npm run deploy
+    - run: npm install
+    - run: npx webpack
+    - run: npm run deploy
