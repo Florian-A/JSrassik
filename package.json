@@ -1,6 +1,6 @@
 {
   "name": "jsrassik",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Petit jeu JS dont le but est d'attraper des Tyrannosaurus Rex.",
   "main": "index.js",
   "scripts": {
