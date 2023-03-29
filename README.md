@@ -23,7 +23,7 @@ La commande pour transpiler l'ensemble du projet :
 npm run build
 ```
 
-### 🕹️ Commandes en jeu :
+### Commandes en jeu :
 
 * Pression n'importe où sur l'écran (si ce dernier est tactile).
   * Via l'évènement [`touchstart`](https://developer.mozilla.org/fr/docs/Web/Guide/DOM/Events/Touch_events).
@@ -36,11 +36,7 @@ npm run build
 
 * Pression sur la touche <kbd>0</kbd> pour cacher toutes les informations de débogages.
 
-### Capture d'écran du jeu :
+### Démonstration :
 
 ![](./conception/readme/demo.gif)
-
-### Diagramme de structure :
-
-![](./conception/uml/structure.png)
 
