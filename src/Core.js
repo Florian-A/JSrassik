@@ -56,7 +56,7 @@ export default class Core {
         this.restartRequested = false;
 
         // Gestion du debug.
-        this.debugLevel = 2;
+        this.debugLevel = 0;
 
         // Ajout de l'obtion Debug.
         this.debug = new Debug(this);
